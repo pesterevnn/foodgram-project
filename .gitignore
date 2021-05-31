@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Input data
+data_for_load/
+
+# static files
+static/
+media/
