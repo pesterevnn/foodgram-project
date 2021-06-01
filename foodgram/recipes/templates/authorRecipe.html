@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Рецепты{% endblock %}
+
+{% block header %}{{ author.first_name }}{% endblock %}
+
+{% block content %}
+    {% include 'blocks/author_subscribe.html' %}
+    <div class="card-list">
+        {% for recipe in page %}
+            {% include 'blocks/recipe.html' %}
+        {% endfor %}
+    </div>
+{% endblock %}

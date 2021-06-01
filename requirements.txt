@@ -4,3 +4,5 @@ djangorestframework
 djangorestframework-simplejwt
 django-filter
 Pillow
+Wheel
+Paginator

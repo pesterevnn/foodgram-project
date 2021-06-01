@@ -9,14 +9,14 @@ class FavoriteRecipes(models.Model):
         settings.AUTH_USER_MODEL,
         verbose_name='Пользователь',
         on_delete=models.CASCADE,
-        related_name='user',
+        related_name='favorite_recipes',
         help_text='Тот кто включает в избранное',
     )
     recipe = models.ForeignKey(
         Recipes,
         verbose_name='Рецепт',
         on_delete=models.CASCADE,
-        related_name='favorite_recipes',
+        related_name='favorite_authors',
         help_text='Добавленный в избранное рецепт'
     )
     class Meta:

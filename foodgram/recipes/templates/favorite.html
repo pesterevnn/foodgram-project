@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Избранное{% endblock %}
+
+{% block header %}Избранное{% endblock %}
+
+{% block content %}
+    <div class="card-list">
+        {% for recipe in page %}
+            {% include 'blocks/recipe.html' %}
+        {% endfor %}
+    </div>
+{% endblock %}

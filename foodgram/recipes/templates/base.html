@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>{% block title %}Рецепты{% endblock %}</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static './pages/index.css' %}">
+    </head>
+
+    <body class="body">
+        <header class="header">
+            {% include 'blocks/navAuth.html' %}
+        </header>
+        <main class="main container">
+            <div class="main__header">
+                <h1 class="main__title">{% block header %}Рецепты{% endblock %}</h1>
+                {% include 'blocks/tags.html' %}
+            </div>
+            
+            {% block content %} 
+                <!-- Содержимое страницы -->
+            {% endblock %}
+            
+            {% include 'blocks/paginator.html' %}
+        </main>
+        {% include 'blocks/footer.html' %}
+        {% include 'blocks/jsscripts.html' %}
+    </body>
+</html>
