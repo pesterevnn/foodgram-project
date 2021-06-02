@@ -8,24 +8,40 @@
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         <title>{% block title %}Рецепты{% endblock %}</title>
         {% load static %}
-        <link rel="stylesheet" href="{% static './pages/index.css' %}">
+        {% if section == 'follow' %}
+            <link rel="stylesheet" href="{% static './pages/myFollow.css' %}">
+        {% endif %}
+        {% if section == 'shoplist' %}
+            <link rel="stylesheet" href="{% static './pages/shopList.css' %}">
+        {% else %}
+            <link rel="stylesheet" href="{% static './pages/index.css' %}">
+        {% endif %}
+
     </head>
 
     <body class="body">
         <header class="header">
-            {% include 'blocks/navAuth.html' %}
+            {% if user.is_authenticated %}
+                {% include 'blocks/navAuth.html' %}
+            {% else %}
+                {% include 'blocks/navNotAuth.html' %}
+            {% endif %}
         </header>
         <main class="main container">
             <div class="main__header">
                 <h1 class="main__title">{% block header %}Рецепты{% endblock %}</h1>
-                {% include 'blocks/tags.html' %}
+                {% if section == 'index' or section == 'favorite' or section == 'profile' %}
+                    {% include 'blocks/tags.html' %}
+                {% endif %}
             </div>
             
             {% block content %} 
                 <!-- Содержимое страницы -->
             {% endblock %}
-            
-            {% include 'blocks/paginator.html' %}
+
+            {% if section != 'shoplist' %}
+                {% include 'blocks/paginator.html' %}
+            {% endif %}
         </main>
         {% include 'blocks/footer.html' %}
         {% include 'blocks/jsscripts.html' %}
