@@ -1,7 +1,8 @@
 from django.conf import settings
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 
 from .models import Recipes, Purchases, Follows, Ingredients_Recipe
@@ -132,3 +133,51 @@ def recipe(request, recipe_id):
         'ingredients': ingredients,
     }
     return render(request, 'singlePage.html', context)
+
+def create_recipe(request):
+    curent_user = request.user
+    section = request.resolver_match.url_name
+    if curent_user.is_authenticated:
+        purchases = Purchases.objects.filter(customer = curent_user)
+        purchases_count = purchases.count()
+    else:
+        purchases_count = 0
+    context = {
+        'user': curent_user,
+        'section': section,
+        'purchases_count': purchases_count,
+    }
+    return render(request, 'formRecipe.html', context)
+
+
+@login_required
+def profile_follow(request, username):
+    author = get_object_or_404(get_user_model(), username=username)
+    user = request.user
+    if not author == user:
+        Follows.objects.get_or_create(subscriber=user, author=author)
+    return redirect('follow')
+
+
+@login_required
+def profile_unfollow(request, username):
+    author = get_object_or_404(get_user_model(), username=username)
+    user = request.user
+    follow = get_object_or_404(Follows, subscriber=user, author=author)
+    follow.delete()
+    return redirect('follow')
+
+
+def del_purchase(request, recipe_id):
+    user = request.user
+    recipe = get_object_or_404(Recipes, pk=recipe_id)
+    purchase = get_object_or_404(Purchases, customer=user, recipe=recipe)
+    purchase.delete()
+    return redirect('shoplist')
+
+
+def add_purchase(request, recipe_id):
+    user = request.user
+    recipe = get_object_or_404(Recipes, pk=recipe_id)
+    Purchases.objects.get_or_create(customer=user, recipe=recipe)
+    return redirect('shoplist')

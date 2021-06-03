@@ -16,10 +16,13 @@
         {% endif %}
         {% if section == 'recipe' %}
             <link rel="stylesheet" href="{% static './pages/single.css' %}"
+        {% endif %}
+        {% if section == 'create_recipe' %}
+            <link rel="stylesheet" href="{% static './pages/form.css' %}">
         {% else %}
             <link rel="stylesheet" href="{% static './pages/index.css' %}">
         {% endif %}
-
+        <link rel="icon" href="data:;base64,=">
     </head>
 
     <body class="body">

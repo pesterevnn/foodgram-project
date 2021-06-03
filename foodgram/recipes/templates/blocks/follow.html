@@ -11,12 +11,12 @@
 
                     <li class="card-user__item">
                         {% if follow.author.recipes.count > 3 %}
-                            <a href="#" class="card-user__link link">Еще {{ follow.count_without_3 }} рецептов...</a>
+                            <a href="{% url 'profile' follow.author.username %}" class="card-user__link link">Еще {{ follow.count_without_3 }} рецептов...</a>
                         {% endif %}
                     </li>
                 </ul>
             </div>
             <div class="card-user__footer">
-                <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button>
+                <a href="{% url 'profile_unfollow' follow.author.username %}" <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button></a>
             </div>
         </div>
