@@ -1,7 +1,7 @@
 <nav class="nav">
     <div class="nav__container container">
         <ul class="nav__items list">
-            <li class="nav__item {% if section == 'index' %}nav__item_active{% endif %}"><a href="{% url 'index' %}" class="nav__link link">Рецепты</a></li>
+            <li class="nav__item {% if section == 'index' or section == 'recipe' %}nav__item_active{% endif %}"><a href="{% url 'index' %}" class="nav__link link">Рецепты</a></li>
             <li class="nav__item {% if section == 'follow' %}nav__item_active{% endif %}"><a href="{% url 'follow' %}" class="nav__link link">Мои подписки</a></li>
             <li class="nav__item"><a href="#" class="nav__link link">Создать рецепт</a></li>
                 <li class="nav__item {% if section == 'favorite' %}nav__item_active{% endif %}"><a href="{% url 'favorite' %}" class="nav__link link">Избранное</a></li>

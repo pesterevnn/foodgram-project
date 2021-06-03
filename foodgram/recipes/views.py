@@ -4,7 +4,7 @@ from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib.auth import get_user_model
 
-from .models import Recipes, Purchases, Follows
+from .models import Recipes, Purchases, Follows, Ingredients_Recipe
 
 
 def index(request):
@@ -113,3 +113,22 @@ def shoplist(request):
         'section': section,
     }
     return render(request, 'shopList.html', context)
+
+def recipe(request, recipe_id):
+    curent_user = request.user
+    recipe = Recipes.objects.get(pk=recipe_id)
+    ingredients = Ingredients_Recipe.objects.filter(recipe=recipe)
+    section = request.resolver_match.url_name
+    if curent_user.is_authenticated:
+        purchases = Purchases.objects.filter(customer = curent_user)
+        purchases_count = purchases.count()
+    else:
+        purchases_count = 0
+    context = {
+        'user': curent_user,
+        'purchases_count': purchases_count,
+        'section': section,
+        'recipe': recipe,
+        'ingredients': ingredients,
+    }
+    return render(request, 'singlePage.html', context)

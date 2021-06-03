@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 
-from .recipes import Recipes
+from ..models import Recipes
 
 
 class Purchases(models.Model):
