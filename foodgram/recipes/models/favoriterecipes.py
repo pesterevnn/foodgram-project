@@ -1,5 +1,7 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.conf import settings
+from django.shortcuts import get_object_or_404
 
 from ..models import Recipes
 
@@ -19,6 +21,7 @@ class FavoriteRecipes(models.Model):
         related_name='favorite_authors',
         help_text='Добавленный в избранное рецепт'
     )
+    
     class Meta:
         constraints = [
             models.UniqueConstraint(

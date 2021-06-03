@@ -6,12 +6,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
 
 from .models import Recipes, Purchases, Follows, Ingredients_Recipe
+from .models import FavoriteRecipes
 
 
 def index(request):
     curent_user = request.user
     recipes = Recipes.objects.all()
-    if request.user.is_authenticated:
+    if curent_user.is_authenticated:
         purchases = Purchases.objects.filter(customer = curent_user)
         purchases_count = purchases.count()
     else:
@@ -125,12 +126,14 @@ def recipe(request, recipe_id):
         purchases_count = purchases.count()
     else:
         purchases_count = 0
+    is_favorite = FavoriteRecipes.objects.filter(user=curent_user, recipe=recipe).exists()
     context = {
         'user': curent_user,
         'purchases_count': purchases_count,
         'section': section,
         'recipe': recipe,
         'ingredients': ingredients,
+        'is_favorite': is_favorite,
     }
     return render(request, 'singlePage.html', context)
 
@@ -167,7 +170,7 @@ def profile_unfollow(request, username):
     follow.delete()
     return redirect('follow')
 
-
+@login_required
 def del_purchase(request, recipe_id):
     user = request.user
     recipe = get_object_or_404(Recipes, pk=recipe_id)
@@ -175,9 +178,24 @@ def del_purchase(request, recipe_id):
     purchase.delete()
     return redirect('shoplist')
 
-
+@login_required
 def add_purchase(request, recipe_id):
     user = request.user
     recipe = get_object_or_404(Recipes, pk=recipe_id)
     Purchases.objects.get_or_create(customer=user, recipe=recipe)
     return redirect('shoplist')
+
+
+def add_favorite(request, recipe_id):
+    user = request.user
+    recipe = get_object_or_404(Recipes, pk=recipe_id)
+    FavoriteRecipes.objects.get_or_create(user=user, recipe=recipe)
+    return redirect('favorite')
+
+
+def del_favorite(request, recipe_id):
+    user = request.user
+    recipe = get_object_or_404(Recipes, pk=recipe_id)
+    favorite_recipe = get_object_or_404(FavoriteRecipes, user=user, recipe=recipe)
+    favorite_recipe.delete()
+    return redirect('favorite')

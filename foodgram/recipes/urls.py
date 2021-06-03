@@ -30,4 +30,14 @@ urlpatterns = [
         views.del_purchase,
         name='del_purchase'
     ),
+    path(
+        'recipes/<int:recipe_id>/add_favorite/',
+        views.add_favorite,
+        name='add_favorite'
+    ),
+    path(
+        'recipes/<int:recipe_id>/del_favorite/',
+        views.del_favorite,
+        name='del_favorite'
+    ),
 ]

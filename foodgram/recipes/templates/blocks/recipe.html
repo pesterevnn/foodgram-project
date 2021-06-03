@@ -23,6 +23,12 @@
             </div>
             <div class="card__footer">
                 <a href="{% url 'add_purchase' recipe.id %}" <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button></a>
-                <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
+                
+                {% if recipe.favorite_authors.exists %}
+                    <a href="{% url 'del_favorite' recipe.id %}"<button class="button button_style_none" name="favorites"><span class="icon-favorite icon-favorite_active"></span></button></a>
+                {% else %}
+                    <a href="{% url 'add_favorite' recipe.id %}"<button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button></a>
+                {% endif %}
+
             </div>
         </div>
