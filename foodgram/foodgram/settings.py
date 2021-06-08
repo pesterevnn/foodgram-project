@@ -10,10 +10,14 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+    'api',
+    'rest_framework',
     'recipes',
     'users',
     'django.contrib.admin',
     'django.contrib.auth',
+    'rest_framework.authtoken',
+    'rest_framework_simplejwt',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -99,3 +103,9 @@ AUTH_USER_MODEL = 'users.User'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 PAGINATOR_PAGE_SIZE = 3
+
+LOGIN_URL = '/auth/login/'
+
+LOGIN_REDIRECT_URL = 'index'
+
+#APPEND_SLASH=False

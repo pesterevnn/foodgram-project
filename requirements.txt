@@ -6,3 +6,5 @@ django-filter
 Pillow
 Wheel
 Paginator
+djangorestframework
+djangorestframework-simplejwt

@@ -1,10 +1,9 @@
-        <div class="card" data-id="120">
+        <div class="card" data-id="{{ recipe.id }}">
             <a href="{% url 'recipe' recipe_id=recipe.id %}" class="link" target="_blank"><img src="{{ recipe.image.url }}" alt="Какой-то текст" class="card__image"></a>
             <div class="card__body">
                 <a class="card__title link" href="{% url 'recipe' recipe_id=recipe.id %}" target="_blank">{{ recipe.title }}</a>
                 <ul class="card__items">
                     {% for tag in recipe.tags.all %}
-
                         {% if tag.tag == 'L' %}
                             <li class="card__item"><span class="badge badge_style_green">Обед</span></li>
                         {% endif %}
@@ -22,13 +21,20 @@
                 </div>
             </div>
             <div class="card__footer">
-                <a href="{% url 'add_purchase' recipe.id %}" <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button></a>
+                {% csrf_token %}
+                <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
+                <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
                 
-                {% if recipe.favorite_authors.exists %}
-                    <a href="{% url 'del_favorite' recipe.id %}"<button class="button button_style_none" name="favorites"><span class="icon-favorite icon-favorite_active"></span></button></a>
-                {% else %}
+                <!--a href="{% url 'add_purchase' recipe.id %}" <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button></a>
+                
+                {% if fav_recipes_count == 0 or not recipe.favorite_authors.exists %}
                     <a href="{% url 'add_favorite' recipe.id %}"<button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button></a>
-                {% endif %}
-
+                {% else %}    
+                    {% for fav_recipe in favorite_recipes %}
+                        {% if fav_recipe.recipe == recipe %}
+                            <a href="{% url 'del_favorite' recipe.id %}"<button class="button button_style_none" name="favorites"><span class="icon-favorite icon-favorite_active"></span></button></a>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %} -->
             </div>
         </div>

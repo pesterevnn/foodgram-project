@@ -7,15 +7,19 @@ from django.contrib.auth import get_user_model
 
 from .models import Recipes, Purchases, Follows, Ingredients_Recipe
 from .models import FavoriteRecipes
-
+from .forms import RecipeForm
 
 def index(request):
     curent_user = request.user
     recipes = Recipes.objects.all()
     if curent_user.is_authenticated:
-        purchases = Purchases.objects.filter(customer = curent_user)
+        purchases = Purchases.objects.filter(customer=curent_user)
+        favorite_recipes = FavoriteRecipes.objects.filter(user=curent_user)
+        fav_recipes_count = favorite_recipes.count()
         purchases_count = purchases.count()
     else:
+        favorite_recipes = None
+        fav_recipes_count = 0
         purchases_count = 0
     paginator = Paginator(recipes, settings.PAGINATOR_PAGE_SIZE)
     page_number = request.GET.get('page')
@@ -28,6 +32,8 @@ def index(request):
         'user': curent_user,
         'purchases_count': purchases_count,
         'section': section,
+        'fav_recipes_count': fav_recipes_count,
+        'favorite_recipes': favorite_recipes,
     }
     return render(request, 'index.html', context)
 
@@ -37,7 +43,11 @@ def favorite(request):
     if request.user.is_authenticated:
         purchases = Purchases.objects.filter(customer = curent_user)
         purchases_count = purchases.count()
+        favorite_recipes = FavoriteRecipes.objects.filter(user=curent_user)
+        fav_recipes_count = favorite_recipes.count()
     else:
+        favorite_recipes = None
+        fav_recipes_count = 0
         purchases_count = 0
     paginator = Paginator(recipes, settings.PAGINATOR_PAGE_SIZE)
     page_number = request.GET.get('page')
@@ -50,6 +60,8 @@ def favorite(request):
         'user': curent_user,
         'purchases_count': purchases_count,
         'section': section,
+        'fav_recipes_count': fav_recipes_count,
+        'favorite_recipes': favorite_recipes,
     }
     return render(request, 'favorite.html', context)
 
@@ -60,7 +72,11 @@ def profile(request, username):
     if request.user.is_authenticated:
         purchases = Purchases.objects.filter(customer = curent_user)
         purchases_count = purchases.count()
+        favorite_recipes = FavoriteRecipes.objects.filter(user=curent_user)
+        fav_recipes_count = favorite_recipes.count()
     else:
+        favorite_recipes = None
+        fav_recipes_count = 0
         purchases_count = 0
     paginator = Paginator(recipes, settings.PAGINATOR_PAGE_SIZE)
     page_number = request.GET.get('page')
@@ -74,6 +90,8 @@ def profile(request, username):
         'author': user,
         'purchases_count': purchases_count,
         'section': section,
+        'fav_recipes_count': fav_recipes_count,
+        'favorite_recipes': favorite_recipes,
     }
     return render(request, 'authorRecipe.html', context)    
 
@@ -124,9 +142,10 @@ def recipe(request, recipe_id):
     if curent_user.is_authenticated:
         purchases = Purchases.objects.filter(customer = curent_user)
         purchases_count = purchases.count()
+        is_favorite = FavoriteRecipes.objects.filter(user=curent_user, recipe=recipe).exists()
     else:
         purchases_count = 0
-    is_favorite = FavoriteRecipes.objects.filter(user=curent_user, recipe=recipe).exists()
+        is_favorite = False
     context = {
         'user': curent_user,
         'purchases_count': purchases_count,
@@ -145,10 +164,18 @@ def create_recipe(request):
         purchases_count = purchases.count()
     else:
         purchases_count = 0
+    form = RecipeForm(request.POST or None, files=request.FILES or None)
+    if form.is_valid():
+        recipe = form.save(commit=False)
+        recipe.author = curent_user
+        recipe.save()
+        return redirect('index')
     context = {
         'user': curent_user,
         'section': section,
         'purchases_count': purchases_count,
+        'form': form, 
+        'added': True,
     }
     return render(request, 'formRecipe.html', context)
 
@@ -185,14 +212,14 @@ def add_purchase(request, recipe_id):
     Purchases.objects.get_or_create(customer=user, recipe=recipe)
     return redirect('shoplist')
 
-
+@login_required
 def add_favorite(request, recipe_id):
     user = request.user
     recipe = get_object_or_404(Recipes, pk=recipe_id)
     FavoriteRecipes.objects.get_or_create(user=user, recipe=recipe)
     return redirect('favorite')
 
-
+@login_required
 def del_favorite(request, recipe_id):
     user = request.user
     recipe = get_object_or_404(Recipes, pk=recipe_id)

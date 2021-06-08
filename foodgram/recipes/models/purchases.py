@@ -9,7 +9,7 @@ class Purchases(models.Model):
         settings.AUTH_USER_MODEL,
         verbose_name='Покупатель',
         on_delete=models.CASCADE,
-        related_name='customer',
+        related_name='purchases',
         help_text='Тот кто включает в список покупок',
     )
     recipe = models.ForeignKey(

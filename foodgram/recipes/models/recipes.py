@@ -49,7 +49,6 @@ class Recipes(models.Model):
         through_fields=('recipe', 'ingredient'),
         verbose_name='Ингредиенты',
     )
-
     class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'

@@ -6,7 +6,7 @@
         <meta name="viewport"
             content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>{% block title %}Рецепты{% endblock %}</title>
+        <title>{% block title %}{% endblock %}</title>
         {% load static %}
         {% if section == 'follow' %}
             <link rel="stylesheet" href="{% static './pages/myFollow.css' %}">
@@ -16,11 +16,9 @@
         {% endif %}
         {% if section == 'recipe' %}
             <link rel="stylesheet" href="{% static './pages/single.css' %}"
-        {% endif %}
-        {% if section == 'create_recipe' %}
-            <link rel="stylesheet" href="{% static './pages/form.css' %}">
         {% else %}
             <link rel="stylesheet" href="{% static './pages/index.css' %}">
+            <link rel="stylesheet" href="{% static './pages/form.css' %}">
         {% endif %}
         <link rel="icon" href="data:;base64,=">
     </head>
@@ -35,7 +33,7 @@
         </header>
         <main class="main container">
             <div class="main__header">
-                <h1 class="main__title">{% if section != 'recipe' %}{% block header %}Рецепты{% endblock %}{% endif %}</h1>
+                <h1 class="main__title">{% if section != 'recipe' %}{% block header %}{% endblock %}{% endif %}</h1>
                 {% if section == 'index' or section == 'favorite' or section == 'profile' %}
                     {% include 'blocks/tags.html' %}
                 {% endif %}
@@ -45,7 +43,7 @@
                 <!-- Содержимое страницы -->
             {% endblock %}
 
-            {% if section != 'shoplist' and section != 'recipe' %}
+            {% if section == 'index' or section == 'favorite' or section == 'follow' %}
                 {% include 'blocks/paginator.html' %}
             {% endif %}
         </main>

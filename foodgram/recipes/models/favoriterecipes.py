@@ -21,7 +21,7 @@ class FavoriteRecipes(models.Model):
         related_name='favorite_authors',
         help_text='Добавленный в избранное рецепт'
     )
-    
+
     class Meta:
         constraints = [
             models.UniqueConstraint(
