@@ -1,16 +1,101 @@
-{% load static %}  
+{% load static %}
+
+  {% if section == 'index' %}
+    {% if user.is_authenticated %}
+      <!--index auth-->  
+      <script src="{% static './js/components/MainCards.js'%}"></script>
+      <script src="{% static './js/components/Purchases.js'%}"></script>
+      <script src="{% static './js/components/Favorites.js'%}"></script>
+      <script src="{% static './js/config/config.js'%}"></script>
+      <script src="{% static './js/components/CardList.js'%}"></script>
+      <script src="{% static './js/components/Header.js'%}"></script>
+      <script src="{% static './js/api/Api.js'%}"></script>
+      <script src="{% static './indexAuth.js'%}"></script>
+    {% else %}
+      <!--index NotAuth-->
+      <script src="{% static './js/components/MainCards.js'%}"></script>
+      <script src="{% static './js/components/Purchases.js'%}"></script>
+      <script src="{% static './js/config/config.js'%}"></script>
+      <script src="{% static './js/components/CardList.js'%}"></script>
+      <script src="{% static './js/components/Header.js'%}"></script>
+      <script src="{% static './js/api/Api.js'%}"></script>
+      <script src="{% static './indexNotAuth.js'%}"></script>
+    {% endif %}
+  {% endif %}
+
+  {% if section == 'favorite' %}
+    <!--favorite-->
+    <script src="{% static './js/components/MainCards.js'%}"></script>
+    <script src="{% static './js/components/Purchases.js'%}"></script>
+    <script src="{% static './js/components/Favorites.js'%}"></script>
+    <script src="{% static './js/config/config.js'%}"></script>
+    <script src="{% static './js/components/CardList.js'%}"></script>
+    <script src="{% static './js/components/Header.js'%}"></script>
+    <script src="{% static './js/api/Api.js'%}"></script>
+    <script src="{% static './favorite.js'%}"></script>
+  {% endif %}
+
+{% if section == 'create_recipe' %}
+  <!--FormRecipe-->
+  <script src="{% static './js/config/config.js'%}"></script>
+  <script src="{% static './js/components/Header.js'%}"></script>
+  <script src="{% static './js/utils/debouncing.js'%}"></script>
+  <script src="{% static './js/api/Api.js'%}"></script>
+  <script src="{% static './formRecipe.js'%}"></script>
+{% endif %}
+
+{% if section == 'follow' %}
+  <!--MyFollow-->
+  <script src="{% static './js/config/config.js'%}"></script>
+  <script src="{% static './js/components/MainCards.js'%}"></script>
+  <script src="{% static './js/components/MyFollow.js'%}"></script>
+  <script src="{% static './js/components/Subscribe.js'%}"></script>
+  <script src="{% static './js/components/Header.js'%}"></script>
+  <script src="{% static './js/api/Api.js'%}"></script>
+  <script src="{% static './myFollow.js'%}"></script>
+{% endif %}
+
+{% if section == 'shoplist' %}
+  <!--ShopList-->
+  <script src="{% static './js/config/config.js'%}"></script>
+  <script src="{% static './js/components/Header.js'%}"></script>
+  <script src="{% static './js/components/ShopList.js'%}"></script>
+  <script src="{% static './js/api/Api.js'%}"></script>
+  <script src="{% static './shopList.js'%}"></script>
+{% endif %}
+
+{% if section == 'recipe' %}
+  {% if user.is_authenticated %}
+    <!--SinglePage-->
+    <script src="{% static './js/components/Purchases.js'%}"></script>
+    <script src="{% static './js/components/Favorites.js'%}"></script>
+    <script src="{% static './js/components/Subscribe.js'%}"></script>
+    <script src="{% static './js/config/config.js'%}"></script>
+    <script src="{% static './js/components/MainCards.js'%}"></script>
+    <script src="{% static './js/components/SingleCard.js'%}"></script>
+    <script src="{% static './js/components/Header.js'%}"></script>
+    <script src="{% static './js/api/Api.js'%}"></script>
+    <script src="{% static './singlePage.js'%}"></script>
+  {% else %}
+    <!--singlePageNotAuth-->
+    <script src="{% static './js/components/Purchases.js'%}"></script>
+    <script src="{% static './js/config/config.js'%}"></script>
+    <script src="{% static './js/components/MainCards.js'%}"></script>
+    <script src="{% static './js/components/SingleCard.js'%}"></script>
+    <script src="{% static './js/components/Header.js'%}"></script>
+    <script src="{% static './js/api/Api.js'%}"></script>
+    <script src="{% static './singlePageNotAuth.js'%}"></script>
+  {% endif %}
+{% endif %}
+
+{% if section == 'profile' %}
   <script src="{% static './js/components/MainCards.js'%}"></script>
   <script src="{% static './js/components/Purchases.js'%}"></script>
   <script src="{% static './js/components/Favorites.js'%}"></script>
+  <script src="{% static './js/components/Subscribe.js'%}"></script>
   <script src="{% static './js/config/config.js'%}"></script>
-  <script src="{% static './js/components/CardList.js'%}"></script>
+  <script src="{% static './js/components/AuthorRecipe.js'%}"></script>
   <script src="{% static './js/components/Header.js'%}"></script>
   <script src="{% static './js/api/Api.js'%}"></script>
-  <script src="{% static './js/utils/debouncing.js'%}"></script>
-  <script src="{% static './indexAuth.js'%}"></script>
   <script src="{% static './authorRecipe.js'%}"></script>
-  <script src="{% static './favorite.js'%}"></script>
-  <script src="{% static './shopList.js'%}"></script>
-  <script src="{% static './formRecipe.js'%}"></script>
-  <script src="{% static './myFollow.js'%}"></script>
-  <script src="{% static './singlePage.js'%}"></script>
+{% endif %}
