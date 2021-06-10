@@ -4,13 +4,63 @@ from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
+from django.views.generic import CreateView
+from django.urls import reverse_lazy
 
 from .models import Recipes, Purchases, Follows, Ingredients_Recipe
-from .models import FavoriteRecipes
-from .forms import RecipeForm
+from .models import FavoriteRecipes, Tags
+from .forms import RecipeCreateForm
 
 def index(request):
     curent_user = request.user
+    recipes = Recipes.objects.all()
+    if curent_user.is_authenticated:
+        purchases = Purchases.objects.filter(customer=curent_user)
+        favorite_recipes = FavoriteRecipes.objects.filter(user=curent_user)
+        fav_recipes_count = favorite_recipes.count()
+        purchases_count = purchases.count()
+        ids_recipes_list_in_purchases = get_ids_recipes_list_in_purchases(purchases)
+        ids_recipes_list_in_favorite = get_ids_recipes_list_in_favorite(favorite_recipes)
+    else:
+        favorite_recipes = None
+        fav_recipes_count = 0
+        purchases = None
+        purchases_count = 0
+        ids_recipes_list_in_purchases = []
+        ids_recipes_list_in_favorite = []
+    paginator = Paginator(recipes, settings.PAGINATOR_PAGE_SIZE)
+    page_number = request.GET.get('page')
+    page = paginator.get_page(page_number)
+    section = request.resolver_match.url_name
+    context = {
+        'page': page,
+        'recipes': recipes,
+        'ids_recipes_list_in_purchases': ids_recipes_list_in_purchases,
+        'ids_recipes_list_in_favorite': ids_recipes_list_in_favorite,
+        'paginator': paginator,
+        'user': curent_user,
+        'purchases_count': purchases_count,
+        'section': section,
+        'fav_recipes_count': fav_recipes_count,
+        'favorite_recipes': favorite_recipes,
+    }
+    return render(request, 'index.html', context)
+
+def get_ids_recipes_list_in_purchases(purchases):
+    ids_list = []
+    for item in purchases:
+        ids_list.append(item.recipe.pk)
+    return ids_list
+
+def get_ids_recipes_list_in_favorite(favorite_recipes):
+    ids_list = []
+    for item in favorite_recipes:
+        ids_list.append(item.recipe.pk)
+    return ids_list
+
+def tag_filter(request, tag_id, action):
+    curent_user = request.user
+    tag = Tags
     recipes = Recipes.objects.all()
     if curent_user.is_authenticated:
         purchases = Purchases.objects.filter(customer=curent_user)
@@ -45,10 +95,14 @@ def favorite(request):
         purchases_count = purchases.count()
         favorite_recipes = FavoriteRecipes.objects.filter(user=curent_user)
         fav_recipes_count = favorite_recipes.count()
+        ids_recipes_list_in_purchases = get_ids_recipes_list_in_purchases(purchases)
+        ids_recipes_list_in_favorite = get_ids_recipes_list_in_favorite(favorite_recipes)
     else:
         favorite_recipes = None
         fav_recipes_count = 0
         purchases_count = 0
+        ids_recipes_list_in_purchases = []
+        ids_recipes_list_in_favorite = []
     paginator = Paginator(recipes, settings.PAGINATOR_PAGE_SIZE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -62,6 +116,8 @@ def favorite(request):
         'section': section,
         'fav_recipes_count': fav_recipes_count,
         'favorite_recipes': favorite_recipes,
+        'ids_recipes_list_in_purchases': ids_recipes_list_in_purchases,
+        'ids_recipes_list_in_favorite': ids_recipes_list_in_favorite,
     }
     return render(request, 'favorite.html', context)
 
@@ -156,28 +212,34 @@ def recipe(request, recipe_id):
     }
     return render(request, 'singlePage.html', context)
 
-def create_recipe(request):
-    curent_user = request.user
-    section = request.resolver_match.url_name
-    if curent_user.is_authenticated:
-        purchases = Purchases.objects.filter(customer = curent_user)
-        purchases_count = purchases.count()
-    else:
-        purchases_count = 0
-    form = RecipeForm(request.POST or None, files=request.FILES or None)
-    if form.is_valid():
-        recipe = form.save(commit=False)
-        recipe.author = curent_user
-        recipe.save()
-        return redirect('index')
-    context = {
-        'user': curent_user,
-        'section': section,
-        'purchases_count': purchases_count,
-        'form': form, 
-        'added': True,
-    }
-    return render(request, 'formRecipe.html', context)
+#def create_recipe(request):
+#    curent_user = request.user
+#    section = request.resolver_match.url_name
+#    if curent_user.is_authenticated:
+#        purchases = Purchases.objects.filter(customer = curent_user)
+#        purchases_count = purchases.count()
+#    else:
+#        purchases_count = 0
+#    form = RecipeCreateForm(request.POST or None, files=request.FILES or None)
+#    if form.is_valid():
+#        recipe = form.save(commit=False)
+#        recipe.author = curent_user
+#        recipe.save()
+#        return redirect('index')
+#    context = {
+#        'user': curent_user,
+#        'section': section,
+#        'purchases_count': purchases_count,
+#        'form': form, 
+#        'added': True,
+#    }
+#   return render(request, 'formRecipe.html', context)
+
+# как вариант попробовать
+class RecipeCreate(CreateView):
+    form_class = RecipeCreateForm
+    success_url = reverse_lazy("index")
+    template_name = "formRecipe.html"
 
 
 @login_required

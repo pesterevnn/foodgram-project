@@ -5,7 +5,9 @@
 {% block header %}{{ author.first_name }}{% endblock %}
 
 {% block content %}
-    {% include 'blocks/author_subscribe.html' %}
+    <div class="author-subscribe" data-author="{{ author.pk }}">
+        <p style="padding: 0 0 2em 0;"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></a></p>
+    </div>
     <div class="card-list">
         {% for recipe in page %}
             {% include 'blocks/recipe.html' %}

@@ -19,10 +19,6 @@ class PurchasesAdmin(admin.ModelAdmin):
     search_fields = ('customer',)
 
 
-#class IngredientsAdmin(admin.ModelAdmin):
-#    list_display = ('title', 'dimension')
-
-
 class IngredientsInline(admin.TabularInline):
     model = Ingredients_Recipe
     fk_name = "recipe"
@@ -40,7 +36,7 @@ class IngredientsRecipeAdmin(admin.ModelAdmin):
 
 
 class TagsAdmin(admin.ModelAdmin):
-    list_display = ('tag', 'description')
+    list_display = ('id', 'tag', 'description')
 
 admin.site.register(Ingredients)
 admin.site.register(Recipes, RecipesAdmin)

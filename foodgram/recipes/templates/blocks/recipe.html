@@ -1,7 +1,7 @@
         <div class="card" data-id="{{ recipe.id }}">
-            <a href="{% url 'recipe' recipe_id=recipe.id %}" class="link" target="_blank"><img src="{{ recipe.image.url }}" alt="Какой-то текст" class="card__image"></a>
+            <a href="{% url 'recipe' recipe.pk %}" class="link"><img src="{{ recipe.image.url }}" alt="Какой-то текст" class="card__image"></a>
             <div class="card__body">
-                <a class="card__title link" href="{% url 'recipe' recipe_id=recipe.id %}" target="_blank">{{ recipe.title }}</a>
+                <a class="card__title link" href="{% url 'recipe' recipe.pk %}">{{ recipe.title }}</a>
                 <ul class="card__items">
                     {% for tag in recipe.tags.all %}
                         {% if tag.tag == 'L' %}
@@ -21,10 +21,16 @@
                 </div>
             </div>
             <div class="card__footer">
-                {% csrf_token %}
-                <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
-                <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
-                
+                {% if recipe.pk in ids_recipes_list_in_purchases %}
+                    <button class="button button_style_light-blue" name="purchases"><span class="icon-check button__icon"></span>Рецепт добавлен</button>
+                {% else %}
+                    <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button>
+                {% endif %}
+                {% if recipe.pk in ids_recipes_list_in_favorite %}
+                    <button class="button button_style_none" name="favorites"><span class="icon-favorite icon-favorite_active"></span></button>
+                {% else %}
+                    <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
+                {% endif %}
                 <!--a href="{% url 'add_purchase' recipe.id %}" <button class="button button_style_light-blue" name="purchases" data-out><span class="icon-plus button__icon"></span>Добавить в покупки</button></a>
                 
                 {% if fav_recipes_count == 0 or not recipe.favorite_authors.exists %}

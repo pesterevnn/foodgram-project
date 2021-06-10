@@ -1,4 +1,4 @@
-        <div class="card-user" data-author="707">
+        <div class="card-user" data-author="{{follow.author.pk}}">
             <div class="card-user__header">
                 <h2 class="card-user__title">{{ follow.author.first_name }}</h2>
             </div>
@@ -17,6 +17,6 @@
                 </ul>
             </div>
             <div class="card-user__footer">
-                <a href="{% url 'profile_unfollow' follow.author.username %}" <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button></a>
+                <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button>
             </div>
         </div>
