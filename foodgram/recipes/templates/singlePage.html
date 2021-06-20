@@ -23,16 +23,7 @@
                 </div>
                 <ul class="single-card__items">
                     {% for tag in recipe.tags.all %}
-
-                        {% if tag.tag == 'L' %}
-                            <li class="single-card__item"><span class="badge badge_style_green">Обед</span></li>
-                        {% endif %}
-                        {% if tag.tag == 'B' %}
-                            <li class="single-card__item"><span class="badge badge_style_orange">Завтрак</span></li>
-                        {% endif %}
-                        {% if tag.tag == 'D' %}
-                            <li class="single-card__item"><span class="badge badge_style_purple">Ужин</span></li>
-                        {% endif %}
+                        <li class="single-card__item"><span class="badge badge_style_{{tag.color}}">{{tag.description}}</span></li>
                     {% endfor %}
                 </ul>
                 <div class="single-card__items single-card__items_column">
@@ -40,15 +31,27 @@
                     <ul class="single-card__items">
                         <li class="single-card__item"><p class="single-card__text"><span class="icon-user"></span> {{ recipe.author.first_name }}</p></li>
                         {% if user == recipe.author %}
-                            <li class="single-card__item">  <a style="margin-left: 2.5em" href="#" class="single-card__text">Редактировать рецепт</a></li>
+                            <li class="single-card__item">  <a style="margin-left: 2.5em" href="{% url 'change_recipe' recipe.id %}" class="single-card__text">Редактировать рецепт</a></li>
                         {% endif %}
                     </ul>
                 </div>
                 <ul class="single-card__items">
-                    <li class="single-card__item"><button class="button button_style_blue" name="purchases" data-out><span class="icon-plus"></span> Добавить в покупки</button></li>
-                    {%if user.is_authenticated %}
-                        <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></li>
+                    
+                    {% if is_in_purcheses %}
+                        <li class="single-card__item"><button class="button button_style_blue" name="purchases"><span class="icon-check"></span>Рецепт добавлен</button></li>
+                    {% else %}
+                        <li class="single-card__item"><button class="button button_style_blue" name="purchases" data-out><span class="icon-plus"></span>Добавить в покупки</button></li>
                     {% endif %}
+                    {%if user.is_authenticated %}
+                        {% if is_in_follow %}
+                            <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe">Отписаться от автора</button></li>
+                        {% else %}
+                            <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></li>
+                        {% endif %}
+                    {% endif %}
+
+
+
                 </ul>
                 <div class="single-card__section">
                     <h3 class="single-card__section-title">Ингридиенты:</h3>

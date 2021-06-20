@@ -1,7 +1,7 @@
 import sys
 sys.path.append('recipes')
 import recipes
-from recipes.models import Purchases, FavoriteRecipes
+from recipes.models import Purchases, FavoriteRecipes, Follows, Ingredients
 
 from rest_framework import serializers
 
@@ -19,7 +19,7 @@ class PurchaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Purchases
         fields = '__all__'
-#        exclude = ('recipe',)
+
 
 class FavoriteRecipeSerializer(serializers.ModelSerializer):
     user = serializers.SlugRelatedField(
@@ -34,3 +34,23 @@ class FavoriteRecipeSerializer(serializers.ModelSerializer):
     class Meta:
         model = FavoriteRecipes
         fields = '__all__'
+
+
+class SubscribeSerializer(serializers.ModelSerializer):
+    subscriber = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='username'
+    )
+    author = serializers.SlugRelatedField(
+        read_only=True,
+        slug_field='username'
+    )
+
+    class Meta:
+        model = Follows
+        fields = '__all__'
+
+class IngredientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ingredients
+        fields = ('title', 'dimension',)

@@ -2,7 +2,7 @@
         <div class="nav__container container">
             <ul class="nav__items list">
                 <li class="nav__item {% if section == 'index' or section == 'recipe' %}nav__item_active{% endif %}"><a href="{% url 'index' %}" class="nav__link link">Рецепты</a></li>
-                <li class="nav__item {% if section == 'shoplist' %}nav__item_active{% endif %}"><a a href="{% url 'shoplist' %}" class="nav__link link">Список покупок <span class="badge badge_style_blue nav__badge" id="counter">{{ purchases_count }}</span></a></li>
+                <!--li class="nav__item {% if section == 'shoplist' %}nav__item_active{% endif %}"><a a href="{% url 'shoplist' %}" class="nav__link link">Список покупок <span class="badge badge_style_blue nav__badge" id="counter">{{ purchases_count }}</span></a></li-->
             </ul>
             <ul class="nav__items list">
                 <li class="nav__item"><a href="{% url 'login' %}" class="nav__link link">Войти</a></li>

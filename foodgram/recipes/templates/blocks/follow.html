@@ -4,11 +4,9 @@
             </div>
             <div class="card-user__body">
                 <ul class="card-user__items">
-
-                {% for recipe in follow.get_first_three_recipes %}
-                    {% include 'blocks/follow_recipe.html' %}
-                {% endfor %}
-
+                    {% for recipe in follow.get_first_three_recipes %}
+                        {% include 'blocks/follow_recipe.html' %}
+                    {% endfor %}
                     <li class="card-user__item">
                         {% if follow.author.recipes.count > 3 %}
                             <a href="{% url 'profile' follow.author.username %}" class="card-user__link link">Еще {{ follow.count_without_3 }} рецептов...</a>
@@ -17,6 +15,10 @@
                 </ul>
             </div>
             <div class="card-user__footer">
-                <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button>
+                {% if follow.author.pk in ids_follows_author %}
+                    <button class="button button_style_light-blue button_size_auto" name="subscribe">Отписаться</button>
+                {% else %}
+                    <button class="button button_style_light-blue button_size_auto" name="subscribe" data-out>Подписаться на автора</button>
+                {% endif %}
             </div>
         </div>

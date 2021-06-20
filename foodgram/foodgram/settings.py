@@ -12,6 +12,7 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'api',
     'rest_framework',
+#    'django_filters',
     'recipes',
     'users',
     'django.contrib.admin',
@@ -108,12 +109,11 @@ LOGIN_URL = '/auth/login/'
 
 LOGIN_REDIRECT_URL = 'index'
 
-
-
 #APPEND_SLASH=False
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'foodgram.middleware.CsrfExemptSessionAuthentication',
         'rest_framework.authentication.BasicAuthentication'
     ),
+#    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }

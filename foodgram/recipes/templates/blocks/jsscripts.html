@@ -35,7 +35,7 @@
     <script src="{% static './favorite.js'%}"></script>
   {% endif %}
 
-{% if section == 'create_recipe' %}
+{% if section == 'create_recipe' or section == 'change_recipe' %}
   <!--FormRecipe-->
   <script src="{% static './js/config/config.js'%}"></script>
   <script src="{% static './js/components/Header.js'%}"></script>
