@@ -79,16 +79,17 @@ def index(request):
     tags = Tags.objects.all()
     curent_user = request.user
 
-    tag_click = request.GET.get('tag')
-    users_tags = get_actual_userstags(request, tag_click)
-    filtered_tags_id = []
-    for item in users_tags:
-        if item.active:
-            filtered_tags_id.append(item.tag.id)
-    recipes = Recipes.objects.filter(
-        tags__in=filtered_tags_id).distinct()
-
     if curent_user.is_authenticated:
+        tag_click = request.GET.get('tag')
+        users_tags = get_actual_userstags(request, tag_click)
+        filtered_tags_id = []
+        for item in users_tags:
+            if item.active:
+                filtered_tags_id.append(item.tag.id)
+        recipes = Recipes.objects.filter(
+            tags__in=filtered_tags_id).distinct()
+
+
         purchases = Purchases.objects.filter(customer=curent_user)
         favorite_recipes = FavoriteRecipes.objects.filter(
             user=curent_user)
@@ -101,6 +102,9 @@ def index(request):
             favorite_recipes
         )
     else:
+        users_tags = []
+        recipes = Recipes.objects.all()
+
         favorite_recipes = None
         fav_recipes_count = 0
         purchases = None
@@ -202,21 +206,20 @@ def favorite(request):
 def profile(request, username):
     curent_user = request.user
     tags = Tags.objects.all()
-
     user = get_object_or_404(get_user_model(), username=username)
 
-    tag_click = request.GET.get('tag')
-    users_tags = get_actual_userstags(request, tag_click)
-    filtered_tags_id = []
-    for item in users_tags:
-        if item.active:
-            filtered_tags_id.append(item.tag.id)
-
-    recipes = Recipes.objects.filter(
-        author=user,
-        tags__in=filtered_tags_id).distinct()
-
     if request.user.is_authenticated:
+        tag_click = request.GET.get('tag')
+        users_tags = get_actual_userstags(request, tag_click)
+        filtered_tags_id = []
+        for item in users_tags:
+            if item.active:
+                filtered_tags_id.append(item.tag.id)
+
+        recipes = Recipes.objects.filter(
+            author=user,
+            tags__in=filtered_tags_id).distinct()
+
         is_follow = Follows.objects.filter(
             subscriber=curent_user,
             author=user).exists()
@@ -230,6 +233,9 @@ def profile(request, username):
         ids_recipes_list_in_favorite = get_ids_recipes_in_favorite(
             favorite_recipes)
     else:
+        users_tags = []
+        recipes = Recipes.objects.filter(author=user)
+
         is_follow = False
         favorite_recipes = None
         fav_recipes_count = 0
