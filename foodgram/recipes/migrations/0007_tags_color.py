@@ -13,6 +13,9 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='tags',
             name='color',
-            field=models.CharField(blank=True, max_length=50, verbose_name='Color'),
+            field=models.CharField(
+                blank=True,
+                max_length=50,
+                verbose_name='Color'),
         ),
     ]

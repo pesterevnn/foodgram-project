@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import Ingredients, Recipes, Ingredients_Recipe
-from .models import Follows, FavoriteRecipes, Purchases, Tags
+from .models import (FavoriteRecipes, Follows, Ingredients,
+                     Ingredients_Recipe, Purchases, Recipes, Tags)
 
 
 class FallowsAdmin(admin.ModelAdmin):
@@ -31,12 +31,14 @@ class RecipesAdmin(admin.ModelAdmin):
         IngredientsInline,
     ]
 
+
 class IngredientsRecipeAdmin(admin.ModelAdmin):
     list_display = ('recipe', 'ingredient', 'amount')
 
 
 class TagsAdmin(admin.ModelAdmin):
     list_display = ('id', 'tag', 'description', 'color')
+
 
 admin.site.register(Ingredients)
 admin.site.register(Recipes, RecipesAdmin)

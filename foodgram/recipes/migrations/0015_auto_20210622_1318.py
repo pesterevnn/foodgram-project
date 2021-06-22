@@ -12,10 +12,16 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name='tags',
-            options={'ordering': ['pk'], 'verbose_name': 'Тэг', 'verbose_name_plural': 'Тэги'},
+            options={
+                'ordering': ['pk'],
+                'verbose_name': 'Тэг',
+                'verbose_name_plural': 'Тэги'},
         ),
         migrations.AlterModelOptions(
             name='userstags',
-            options={'ordering': ['pk'], 'verbose_name': 'Пользовательский Тэг', 'verbose_name_plural': 'Пользовательские тэги'},
+            options={
+                'ordering': ['pk'],
+                'verbose_name': 'Пользовательский Тэг',
+                'verbose_name_plural': 'Пользовательские тэги'},
         ),
     ]

@@ -1,6 +1,7 @@
 from django.db import models
 
-from ..models import Recipes, Ingredients
+from .ingredients import Ingredients
+from .recipes import Recipes
 
 
 class Ingredients_Recipe(models.Model):
@@ -23,4 +24,5 @@ class Ingredients_Recipe(models.Model):
         ordering = ['ingredient']
 
     def __str__(self):
-        return f'{self.ingredient.title} - {self.amount} {self.ingredient.dimension}'
+        return f'{self.ingredient.title} - \
+                 {self.amount} {self.ingredient.dimension}'

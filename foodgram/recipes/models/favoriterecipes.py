@@ -1,9 +1,7 @@
-from django.contrib.auth import get_user_model
-from django.db import models
 from django.conf import settings
-from django.shortcuts import get_object_or_404
+from django.db import models
 
-from ..models import Recipes
+from .recipes import Recipes
 
 
 class FavoriteRecipes(models.Model):

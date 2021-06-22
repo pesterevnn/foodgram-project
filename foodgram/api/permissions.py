@@ -5,6 +5,7 @@ from rest_framework.exceptions import APIException
 class AnonForbidden(APIException):
     status_code = status.HTTP_401_UNAUTHORIZED
 
+
 class IsOwnerOrAdmin(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method in permissions.SAFE_METHODS:

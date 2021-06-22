@@ -22,15 +22,17 @@ class Tags(models.Model):
         max_length=50,
         blank=True
     )
+
     class Meta:
         verbose_name = 'Тэг'
         verbose_name_plural = 'Тэги'
         ordering = ['pk']
         constraints = [
             models.UniqueConstraint(
-                fields=['tag',],
+                fields=['tag', ],
                 name='unique_tag'
             ),
         ]
+
     def __str__(self) -> str:
         return self.tag

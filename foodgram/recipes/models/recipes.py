@@ -1,5 +1,5 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 
 from .ingredients import Ingredients
 from .tags import Tags
@@ -27,7 +27,7 @@ class Recipes(models.Model):
     description = models.CharField(
         verbose_name='Описание',
         max_length=550,
-        help_text='Укажите описание рецепта',        
+        help_text='Укажите описание рецепта',
     )
     image = models.ImageField(
         verbose_name='Фото',
@@ -49,6 +49,7 @@ class Recipes(models.Model):
         through_fields=('recipe', 'ingredient'),
         verbose_name='Ингредиенты',
     )
+
     class Meta:
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'

@@ -1,8 +1,7 @@
-from django.contrib import admin
-from django.urls import include, path
 from django.conf import settings
 from django.conf.urls.static import static
-
+from django.contrib import admin
+from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -16,7 +15,10 @@ urlpatterns = [
     path('create_recipe/api/', include('api.urls')),
     path('change_recipe/api/', include('api.urls')),
     path('recipes/<int:recipe_id>/api/', include('api.urls')),
-    path('recipes/<int:recipe_id>/change_recipe/api/', include('api.urls')),
+    path(
+        'recipes/<int:recipe_id>/change_recipe/api/',
+        include('api.urls')
+    ),
     path('<str:username>/api/', include('api.urls')),
 ]
 

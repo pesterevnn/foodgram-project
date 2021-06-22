@@ -1,5 +1,5 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 
 
 class Follows(models.Model):
@@ -26,7 +26,6 @@ class Follows(models.Model):
         count = self.author.recipes.count()
         count_without_3 = count - 3
         return count_without_3
-    
 
     class Meta:
         constraints = [

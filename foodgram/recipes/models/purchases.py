@@ -1,7 +1,7 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
 
-from ..models import Recipes
+from .recipes import Recipes
 
 
 class Purchases(models.Model):
@@ -19,6 +19,7 @@ class Purchases(models.Model):
         related_name='purchases',
         help_text='Добавленный в избранное рецепт'
     )
+
     class Meta:
         constraints = [
             models.UniqueConstraint(

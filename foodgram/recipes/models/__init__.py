@@ -1,12 +1,11 @@
-from .recipes import Recipes
+from .favoriterecipes import FavoriteRecipes
+from .follows import Follows
 from .ingredients import Ingredients
 from .ingredients_recipe import Ingredients_Recipe
-from .follows import Follows
-from .favoriterecipes import FavoriteRecipes
 from .purchases import Purchases
+from .recipes import Recipes
 from .tags import Tags
 from .users_tags import UsersTags
-
 
 __all__ = [
     Recipes,

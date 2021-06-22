@@ -1,6 +1,8 @@
-from django.db import models
 from django.conf import settings
+from django.db import models
+
 from .tags import Tags
+
 
 class UsersTags(models.Model):
     user = models.ForeignKey(

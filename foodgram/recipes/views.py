@@ -1,35 +1,48 @@
-from django.conf import settings
-from django.shortcuts import render, redirect
-from django.shortcuts import get_object_or_404
-from django.core.paginator import Paginator
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth import get_user_model
-from django.views.generic import CreateView
-from django.urls import reverse_lazy
-
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 import io
+
+from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.http import FileResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
 from reportlab.pdfgen import canvas
 
-
-from .models import Recipes, Purchases, Follows, Ingredients_Recipe
-from .models import FavoriteRecipes, Tags, Ingredients, UsersTags
 from .forms import RecipeCreateForm
+from .models import (FavoriteRecipes, Follows, Ingredients,
+                     Ingredients_Recipe, Purchases, Recipes, Tags,
+                     UsersTags)
+
 
 def get_usertags(request):
     user = request.user
     users_tags = user.userstags.all()
     return users_tags
 
+
 def set_active_userstags(request):
     user = request.user
     tags = Tags.objects.all()
     users_tags = []
-    for tag in tags:
-        values_for_update={"user": user, "tag": tag, 'active': True}
-        users_tag, created = UsersTags.objects.update_or_create(user=user, tag=tag, defaults = values_for_update)
-        users_tags.append(users_tag)   
+    if user.is_authenticated:
+        for tag in tags:
+            values_for_update = {
+                "user": user,
+                "tag": tag,
+                'active': True
+            }
+            users_tag, created = UsersTags.objects.update_or_create(
+                user=user,
+                tag=tag,
+                defaults=values_for_update
+            )
+            users_tags.append(users_tag)
     return users_tags
+
 
 def get_actual_userstags(request, tag_click):
     curent_user = request.user
@@ -50,6 +63,7 @@ def get_actual_userstags(request, tag_click):
         users_tags = get_usertags(request)
     return users_tags
 
+
 def get_filtertags_active(request):
     tag_click = request.GET.get('tag')
     users_tags = get_actual_userstags(request, tag_click)
@@ -58,6 +72,7 @@ def get_filtertags_active(request):
         if item.active:
             filtered_tags_id.append(item.tag.id)
     return filtered_tags_id
+
 
 def index(request):
 
@@ -70,15 +85,21 @@ def index(request):
     for item in users_tags:
         if item.active:
             filtered_tags_id.append(item.tag.id)
-    recipes = Recipes.objects.filter(tags__in=filtered_tags_id).distinct()
+    recipes = Recipes.objects.filter(
+        tags__in=filtered_tags_id).distinct()
 
     if curent_user.is_authenticated:
         purchases = Purchases.objects.filter(customer=curent_user)
-        favorite_recipes = FavoriteRecipes.objects.filter(user=curent_user)
+        favorite_recipes = FavoriteRecipes.objects.filter(
+            user=curent_user)
         fav_recipes_count = favorite_recipes.count()
         purchases_count = purchases.count()
-        ids_recipes_list_in_purchases = get_ids_recipes_list_in_purchases(purchases)
-        ids_recipes_list_in_favorite = get_ids_recipes_list_in_favorite(favorite_recipes)
+        ids_recipes_list_in_purchases = get_ids_recipes_in_purchases(
+            purchases
+        )
+        ids_recipes_list_in_favorite = get_ids_recipes_in_favorite(
+            favorite_recipes
+        )
     else:
         favorite_recipes = None
         fav_recipes_count = 0
@@ -106,17 +127,20 @@ def index(request):
     }
     return render(request, 'index.html', context)
 
-def get_ids_recipes_list_in_purchases(purchases):
+
+def get_ids_recipes_in_purchases(purchases):
     ids_list = []
     for item in purchases:
         ids_list.append(item.recipe.pk)
     return ids_list
 
-def get_ids_recipes_list_in_favorite(favorite_recipes):
+
+def get_ids_recipes_in_favorite(favorite_recipes):
     ids_list = []
     for item in favorite_recipes:
         ids_list.append(item.recipe.pk)
     return ids_list
+
 
 def get_ids_authors_in_follows(follows):
     ids_list = []
@@ -124,25 +148,30 @@ def get_ids_authors_in_follows(follows):
         ids_list.append(item.author.pk)
     return ids_list
 
+
 def favorite(request):
     tags = Tags.objects.all()
     curent_user = request.user
-    
+
     tag_click = request.GET.get('tag')
     users_tags = get_actual_userstags(request, tag_click)
     filtered_tags_id = []
     for item in users_tags:
         if item.active:
             filtered_tags_id.append(item.tag.id)
-    recipes = Recipes.objects.filter(tags__in=filtered_tags_id).distinct()
-    
+    recipes = Recipes.objects.filter(
+        tags__in=filtered_tags_id).distinct()
+
     if request.user.is_authenticated:
-        purchases = Purchases.objects.filter(customer = curent_user)
+        purchases = Purchases.objects.filter(customer=curent_user)
         purchases_count = purchases.count()
-        favorite_recipes = FavoriteRecipes.objects.filter(user=curent_user)
+        favorite_recipes = FavoriteRecipes.objects.filter(
+            user=curent_user)
         fav_recipes_count = favorite_recipes.count()
-        ids_recipes_list_in_purchases = get_ids_recipes_list_in_purchases(purchases)
-        ids_recipes_list_in_favorite = get_ids_recipes_list_in_favorite(favorite_recipes)
+        ids_recipes_list_in_purchases = get_ids_recipes_in_purchases(
+            purchases)
+        ids_recipes_list_in_favorite = get_ids_recipes_in_favorite(
+            favorite_recipes)
     else:
         favorite_recipes = None
         fav_recipes_count = 0
@@ -169,9 +198,10 @@ def favorite(request):
     }
     return render(request, 'favorite.html', context)
 
+
 def profile(request, username):
     curent_user = request.user
-    tags =  Tags.objects.all()
+    tags = Tags.objects.all()
 
     user = get_object_or_404(get_user_model(), username=username)
 
@@ -182,16 +212,23 @@ def profile(request, username):
         if item.active:
             filtered_tags_id.append(item.tag.id)
 
-    recipes = Recipes.objects.filter(author=user, tags__in=filtered_tags_id).distinct()
+    recipes = Recipes.objects.filter(
+        author=user,
+        tags__in=filtered_tags_id).distinct()
 
     if request.user.is_authenticated:
-        is_follow = Follows.objects.filter(subscriber=curent_user, author=user).exists()
-        purchases = Purchases.objects.filter(customer = curent_user)
+        is_follow = Follows.objects.filter(
+            subscriber=curent_user,
+            author=user).exists()
+        purchases = Purchases.objects.filter(customer=curent_user)
         purchases_count = purchases.count()
-        favorite_recipes = FavoriteRecipes.objects.filter(user=curent_user)
+        favorite_recipes = FavoriteRecipes.objects.filter(
+            user=curent_user)
         fav_recipes_count = favorite_recipes.count()
-        ids_recipes_list_in_purchases = get_ids_recipes_list_in_purchases(purchases)
-        ids_recipes_list_in_favorite = get_ids_recipes_list_in_favorite(favorite_recipes)
+        ids_recipes_list_in_purchases = get_ids_recipes_in_purchases(
+            purchases)
+        ids_recipes_list_in_favorite = get_ids_recipes_in_favorite(
+            favorite_recipes)
     else:
         is_follow = False
         favorite_recipes = None
@@ -219,14 +256,15 @@ def profile(request, username):
         'ids_recipes_list_in_favorite': ids_recipes_list_in_favorite,
         'is_follow': is_follow,
     }
-    return render(request, 'authorRecipe.html', context)    
+    return render(request, 'authorRecipe.html', context)
+
 
 def follow(request):
     curent_user = request.user
     follows = Follows.objects.filter(subscriber=curent_user)
     ids_follows_author = get_ids_authors_in_follows(follows)
     if request.user.is_authenticated:
-        purchases = Purchases.objects.filter(customer = curent_user)
+        purchases = Purchases.objects.filter(customer=curent_user)
         purchases_count = purchases.count()
     else:
         purchases_count = 0
@@ -245,10 +283,11 @@ def follow(request):
     }
     return render(request, 'myFollow.html', context)
 
+
 def shoplist(request):
     curent_user = request.user
     if curent_user.is_authenticated:
-        purchases = Purchases.objects.filter(customer = curent_user)
+        purchases = Purchases.objects.filter(customer=curent_user)
         purchases_count = purchases.count()
     else:
         purchases = None
@@ -262,17 +301,25 @@ def shoplist(request):
     }
     return render(request, 'shopList.html', context)
 
+
 def recipe(request, recipe_id):
     curent_user = request.user
     recipe = Recipes.objects.get(pk=recipe_id)
     ingredients = Ingredients_Recipe.objects.filter(recipe=recipe)
     section = request.resolver_match.url_name
     if curent_user.is_authenticated:
-        purchases = Purchases.objects.filter(customer = curent_user)
+        purchases = Purchases.objects.filter(customer=curent_user)
         purchases_count = purchases.count()
-        is_favorite = FavoriteRecipes.objects.filter(user=curent_user, recipe=recipe).exists()
-        is_in_purcheses = Purchases.objects.filter(customer=curent_user, recipe=recipe).exists()
-        is_in_follow = Follows.objects.filter(subscriber=curent_user, author=recipe.author)
+        is_favorite = FavoriteRecipes.objects.filter(
+            user=curent_user,
+            recipe=recipe).exists()
+        is_in_purcheses = Purchases.objects.filter(
+            customer=curent_user,
+            recipe=recipe).exists()
+        is_in_follow = Follows.objects.filter(
+            subscriber=curent_user,
+            author=recipe.author
+        )
     else:
         purchases_count = 0
         is_favorite = False
@@ -290,16 +337,20 @@ def recipe(request, recipe_id):
     }
     return render(request, 'singlePage.html', context)
 
+
 def create_recipe(request):
     curent_user = request.user
     tags = Tags.objects.all()
     section = request.resolver_match.url_name
     if curent_user.is_authenticated:
-        purchases = Purchases.objects.filter(customer = curent_user)
+        purchases = Purchases.objects.filter(customer=curent_user)
         purchases_count = purchases.count()
     else:
         purchases_count = 0
-    form = RecipeCreateForm(request.POST or None, files=request.FILES or None)
+    form = RecipeCreateForm(
+        request.POST or None,
+        files=request.FILES or None
+    )
     if form.is_valid():
         recipe = form.save(commit=False)
         recipe.author = curent_user
@@ -311,7 +362,11 @@ def create_recipe(request):
             for key in ing_for_recipes.keys():
                 ingredient = Ingredients.objects.get(pk=key)
                 amount = ing_for_recipes[key]
-                ing_recipe = Ingredients_Recipe(recipe=recipe, ingredient=ingredient, amount=amount)
+                ing_recipe = Ingredients_Recipe(
+                    recipe=recipe,
+                    ingredient=ingredient,
+                    amount=amount
+                )
                 ing_recipe.save()
                 ids_ifr.append(ing_recipe.id)
         recipe.save()
@@ -327,6 +382,7 @@ def create_recipe(request):
     }
     return render(request, 'formRecipe.html', context)
 
+
 def get_tags_ids(post_dict):
     tags_ids = []
     if post_dict.get('breakfast'):
@@ -337,6 +393,7 @@ def get_tags_ids(post_dict):
         tags_ids.append(Tags.objects.get(tag='dinner').id)
     return tags_ids
 
+
 def get_ingredients_for_recipe(post_dict):
     ingredients_recipe_dic = {}
     for key in post_dict.keys():
@@ -345,9 +402,12 @@ def get_ingredients_for_recipe(post_dict):
             name_ing = post_dict[key]
             value_ing = post_dict[f"valueIngredient_{index}"]
             units_ing = post_dict[f"unitsIngredient_{index}"]
-            ing_id = Ingredients.objects.get(title=name_ing, dimension=units_ing).id
-            ingredients_recipe_dic[ing_id] = value_ing 
+            ing_id = Ingredients.objects.get(
+                title=name_ing,
+                dimension=units_ing).id
+            ingredients_recipe_dic[ing_id] = value_ing
     return ingredients_recipe_dic
+
 
 def change_recipe(request, recipe_id):
     tags = Tags.objects.all()
@@ -358,19 +418,22 @@ def change_recipe(request, recipe_id):
 
     ingredients_recipe = []
     for ingredient in recipe.ingredients.all():
-        ingr_recipe = Ingredients_Recipe.objects.get(recipe=recipe, ingredient=ingredient)
+        ingr_recipe = Ingredients_Recipe.objects.get(
+            recipe=recipe,
+            ingredient=ingredient
+        )
         ingredients_recipe.append(ingr_recipe)
 
     curent_user = request.user
     section = request.resolver_match.url_name
     if curent_user.is_authenticated:
-        purchases = Purchases.objects.filter(customer = curent_user)
+        purchases = Purchases.objects.filter(customer=curent_user)
         purchases_count = purchases.count()
     else:
         purchases_count = 0
     form = RecipeCreateForm(
         request.POST or None,
-        files=request.FILES or None, 
+        files=request.FILES or None,
         instance=recipe
     )
     if form.is_valid():
@@ -383,13 +446,16 @@ def change_recipe(request, recipe_id):
             for key in ing_for_recipes.keys():
                 ingredient = Ingredients.objects.get(pk=key)
                 amount = ing_for_recipes[key]
-                ing_recipe = Ingredients_Recipe(recipe=recipe, ingredient=ingredient, amount=amount)
+                ing_recipe = Ingredients_Recipe(
+                    recipe=recipe,
+                    ingredient=ingredient,
+                    amount=amount)
                 ing_recipe.save()
                 ids_ifr.append(ing_recipe.id)
         recipe.save()
         return redirect(
-                'recipe',
-                recipe_id=recipe.pk
+            'recipe',
+            recipe_id=recipe.pk
         )
     context = {
         'user': curent_user,
@@ -413,7 +479,7 @@ def delete_recipe(request, recipe_id):
 
 def get_all_ingredients_from_shoplist(request):
     curent_user = request.user
-    purchases = Purchases.objects.filter(customer = curent_user)
+    purchases = Purchases.objects.filter(customer=curent_user)
     recipes = []
     for purchase in purchases:
         recipes.append(purchase.recipe)
@@ -421,7 +487,10 @@ def get_all_ingredients_from_shoplist(request):
     all_ingredients = {}
     for recipe in recipes:
         for ingredient in recipe.ingredients.all():
-            ingr_recipe = Ingredients_Recipe.objects.get(recipe=recipe, ingredient=ingredient)
+            ingr_recipe = Ingredients_Recipe.objects.get(
+                recipe=recipe,
+                ingredient=ingredient
+            )
             cur_amount = ingr_recipe.amount
             cur_total_amount = all_ingredients.get(ingredient)
             if cur_total_amount is not None:
@@ -429,26 +498,35 @@ def get_all_ingredients_from_shoplist(request):
             else:
                 summ_amounts = cur_amount
             all_ingredients[ingredient] = summ_amounts
-    
+
     return all_ingredients
 
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
+
 pdfmetrics.registerFont(TTFont('Vera', 'Vera.ttf'))
 
+
 def download_shoplist(request):
-    total_ingredients_dict = get_all_ingredients_from_shoplist(request)
-    
+    total_ingredients_dict = get_all_ingredients_from_shoplist(
+        request)
+
     buffer = io.BytesIO()
     p = canvas.Canvas(buffer)
     p.setFont('Vera', 14)
     p.drawString(250, 800, "My SHOPLIST")
     h = 760
     for ingredient in total_ingredients_dict.keys():
-        p.drawString(100, h, f"- {ingredient.title} ({ingredient.dimension}) - {total_ingredients_dict[ingredient]}")
+        p.drawString(
+            100,
+            h,
+            f"- {ingredient.title} ({ingredient.dimension}) \
+                - {total_ingredients_dict[ingredient]}")
         h = h - 20
     p.showPage()
     p.save()
 
     buffer.seek(0)
-    return FileResponse(buffer, as_attachment=True, filename='shoplist.pdf')
+    return FileResponse(
+        buffer,
+        as_attachment=True,
+        filename='shoplist.pdf'
+    )
