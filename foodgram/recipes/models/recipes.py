@@ -56,3 +56,9 @@ class Recipes(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_ingredients_list(self):
+        ingredients = []
+        for ingredient in self.ingredients.all():
+            ingredients.append(ingredient)
+        return ingredients

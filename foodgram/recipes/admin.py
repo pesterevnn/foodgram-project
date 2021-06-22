@@ -26,7 +26,7 @@ class IngredientsInline(admin.TabularInline):
 
 
 class RecipesAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description', 'pub_date')
+    list_display = ('title', 'author', 'description', 'pub_date')
     inlines = [
         IngredientsInline,
     ]

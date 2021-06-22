@@ -9,3 +9,4 @@ Paginator
 djangorestframework
 djangorestframework-simplejwt
 django-filter
+reportlab

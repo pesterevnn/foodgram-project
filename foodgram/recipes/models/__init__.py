@@ -5,6 +5,8 @@ from .follows import Follows
 from .favoriterecipes import FavoriteRecipes
 from .purchases import Purchases
 from .tags import Tags
+from .users_tags import UsersTags
+
 
 __all__ = [
     Recipes,
@@ -13,5 +15,6 @@ __all__ = [
     Follows,
     FavoriteRecipes,
     Purchases,
-    Tags
+    Tags,
+    UsersTags,
 ]

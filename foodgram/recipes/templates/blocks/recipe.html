@@ -6,11 +6,12 @@
                     {% include 'blocks/tags.html' %}
                 </ul>
                 <div class="card__items card__items_column">
-                    <p class="card__text"><span class="icon-time"></span> {{ recipe.cooking_time }} мин.</p>
+                    <p class="card__text"><span class="icon-time"></span> {{ recipe.cooking_time }} мин. {% if recipe.tags.all in tags %} {{ recipe.tags.all }} {% endif %} </p>
                     <p class="card__text"><span class="icon-user"></span> <a href="{% url 'profile' username=recipe.author.username %}" style="color: black">{{ recipe.author.first_name }}</a></p>
                 </div>
             </div>
             <div class="card__footer">
+            {% if user.is_authenticated %}
                 {% if recipe.pk in ids_recipes_list_in_purchases %}
                     <button class="button button_style_light-blue" name="purchases"><span class="icon-check button__icon"></span>Рецепт добавлен</button>
                 {% else %}
@@ -21,6 +22,6 @@
                 {% else %}
                     <button class="button button_style_none" name="favorites" data-out><span class="icon-favorite"></span></button>
                 {% endif %}
-
+            {% endif %}
             </div>
         </div>

@@ -37,10 +37,14 @@
                 <h1 class="main__title">{% if section != 'recipe' %}{% block header %} {% endblock %}{% endif %}</h1>
                 {% if section == 'index' or section == 'favorite' or section == 'profile' %}
                     <ul class="tags">
-                        {% for tag in tags %}
+                        {% for tag in users_tags %}
                             <li class="tags__item">
-                                <a id="tag.tag" class="tags__checkbox tags__checkbox_style_{{tag.color}} tags__checkbox_active" href="{% url 'tags_filter' %}"></a>
-                                <span class="tags__label">{{tag.description}}</span>
+                                {% if tag.active %}
+                                    <a id="tag.tag" class="tags__checkbox tags__checkbox_style_{{tag.tag.color}} tags__checkbox_active" href="?tag={{tag.tag.tag}}&swch=off"></a>
+                                {% else %}
+                                    <a id="tag.tag" class="tags__checkbox tags__checkbox_style_{{tag.tag.color}}" href="?tag={{tag.tag.tag}}&swch=on"></a>    
+                                {% endif %}
+                                <span class="tags__label">{{tag.tag.description}}</span>
                             </li>
                         {% endfor %}
                     </ul>
@@ -51,7 +55,7 @@
                 <!-- Содержимое страницы -->
             {% endblock %}
 
-            {% if section == 'index' or section == 'favorite' or section == 'follow' %}
+            {% if section == 'index' or section == 'favorite' or section == 'follow' or section ==  'profile' %}
                 {% include 'blocks/paginator.html' %}
             {% endif %}
         </main>

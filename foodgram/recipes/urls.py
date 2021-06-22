@@ -7,10 +7,10 @@ urlpatterns = [
     path('favorite/', views.favorite, name='favorite'),
     path('follow/', views.follow, name='follow'),
     path('shoplist/', views.shoplist, name='shoplist'),
+    path('shoplist/download/', views.download_shoplist, name='download_shoplist'),
     path('create_recipe/', views.create_recipe, name='create_recipe'),
     path('recipes/<int:recipe_id>/change_recipe/', views.change_recipe, name='change_recipe'),
     path('recipes/<int:recipe_id>/change_recipe/del_recipe/', views.delete_recipe, name='del_recipe'),
     path('<str:username>/', views.profile, name='profile'),
     path('recipes/<int:recipe_id>/', views.recipe, name='recipe'),
-    path('tags_filtered/', views.tag_filter, name='tags_filter'),
 ]
