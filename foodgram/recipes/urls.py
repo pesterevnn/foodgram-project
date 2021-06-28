@@ -12,10 +12,10 @@ urlpatterns = [
         views.download_shoplist,
         name='download_shoplist'
     ),
-    path('create_recipe/', views.create_recipe, name='create_recipe'),
+    path('create_recipe/', views.create_or_edit_recipe, name='create_recipe'),
     path(
         'recipes/<int:recipe_id>/change_recipe/',
-        views.change_recipe,
+        views.create_or_edit_recipe,
         name='change_recipe'
     ),
     path(

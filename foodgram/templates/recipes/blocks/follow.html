@@ -5,7 +5,7 @@
             <div class="card-user__body">
                 <ul class="card-user__items">
                     {% for recipe in follow.get_first_three_recipes %}
-                        {% include 'blocks/follow_recipe.html' %}
+                        {% include 'recipes/blocks/follow_recipe.html' %}
                     {% endfor %}
                     <li class="card-user__item">
                         {% if follow.author.recipes.count > 3 %}

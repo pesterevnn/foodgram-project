@@ -3,7 +3,7 @@
             <div class="card__body">
                 <a class="card__title link" href="{% url 'recipe' recipe.pk %}">{{ recipe.title }}</a>
                 <ul class="card__items">
-                    {% include 'blocks/tags.html' %}
+                    {% include 'recipes/blocks/tags.html' %}
                 </ul>
                 <div class="card__items card__items_column">
                     <p class="card__text"><span class="icon-time"></span> {{ recipe.cooking_time }} мин. {% if recipe.tags.all in tags %} {{ recipe.tags.all }} {% endif %} </p>

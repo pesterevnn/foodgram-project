@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "recipes/base.html" %}
 
 {% block title %}Список покупок{% endblock %}
 
@@ -8,7 +8,7 @@
     <div class="card-list card-list_column">
         <ul class="shopping-list">
             {% for purchase in purchases %}
-                {% include 'blocks/purchase.html' %}
+                {% include 'recipes/blocks/purchase.html' %}
             {% endfor %}        
         </ul>
     </div>

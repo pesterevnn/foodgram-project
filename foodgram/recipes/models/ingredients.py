@@ -17,7 +17,6 @@ class Ingredients(models.Model):
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'ингредиенты'
-        # ordering = ['title']
 
     def __str__(self):
         return f'{self.title}, {self.dimension}'

@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from .models import (FavoriteRecipes, Follows, Ingredients,
-                     Ingredients_Recipe, Purchases, Recipes, Tags)
+from .models import (FavoriteRecipes, Follows, Ingredients, Ingredients_Recipe,
+                     Purchases, Recipes, Tags)
 
 
 class FallowsAdmin(admin.ModelAdmin):

@@ -7,14 +7,17 @@ SECRET_KEY = 'django-insecure-y@542@a+576l!oaq^3vp%cug(ui52(-6k1r5-b0*qpl66fy-zr
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '[::1]',
+]
 
 INSTALLED_APPS = [
     'api',
-    'rest_framework',
-    #    'django_filters',
     'recipes',
     'users',
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'rest_framework.authtoken',
@@ -36,20 +39,22 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'foodgram.urls'
-
-TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
+TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATES_DIR],
         'APP_DIRS': True,
+        'DIRS': [TEMPLATE_DIR, os.path.join(BASE_DIR, 'templates/users'), os.path.join(BASE_DIR, 'templates/recipes')],
         'OPTIONS': {
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'recipes.context_processors.tags.get_all_tags',
+                'recipes.context_processors.purchases_count.get_purchases_count',
+                'recipes.context_processors.favorite_recipes.get_favorite_recipes',
             ],
         },
     },

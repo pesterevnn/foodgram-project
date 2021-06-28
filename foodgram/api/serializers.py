@@ -1,10 +1,5 @@
-from recipes.models import (FavoriteRecipes, Follows, Ingredients,
-                            Purchases)
+from recipes.models import FavoriteRecipes, Follows, Ingredients, Purchases
 from rest_framework import serializers
-import recipes
-import sys
-
-sys.path.append('recipes')
 
 
 class PurchaseSerializer(serializers.ModelSerializer):

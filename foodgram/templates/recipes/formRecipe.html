@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "recipes/base.html" %}
 
 {% block title %}{% if added %}Создание рецепта{% else %}Редактирование рецепта{% endif %}{% endblock %}
 {% block header %}{% if added %}Создание рецепта{% else %}Редактирование рецепта{% endif %}{% endblock %}
@@ -29,7 +29,7 @@
                                 <input type="checkbox" name="{{tag.tag}}" id="{{tag.id}}" class="tags__checkbox tags__checkbox_style_{{tag.color}}">
                             {% else %}
                                 {% if tag in recipe.tags.all %}
-                                    <input type="checkbox" name="{{tag.tag}}" id="{{tag.id}}" class="tags__checkbox tags__checkbox_style_{{tag.color}} tags__checkbox_active">
+                                    <input type="checkbox" name="{{tag.tag}}" id="{{tag.id}}" class="tags__checkbox tags__checkbox_style_{{tag.color}}" checked>
                                 {% else %}
                                     <input type="checkbox" name="{{tag.tag}}" id="{{tag.id}}" class="tags__checkbox tags__checkbox_style_{{tag.color}}">
                                 {% endif %}

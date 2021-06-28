@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "recipes/base.html" %}
 
 {% block title %}Мои подписки{% endblock %}
 {% block header %}Мои подписки{% endblock %}
@@ -6,7 +6,7 @@
 {% block content %} 
     <div class="card-list">
         {% for follow in page %}
-            {% include 'blocks/follow.html' %}
+            {% include 'recipes/blocks/follow.html' %}
         {% endfor %}
     </div>
 {% endblock %}

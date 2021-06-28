@@ -16,5 +16,5 @@ class RecipeCreateForm(ModelForm):
         self.fields['title'].widget.attrs['class'] = 'form__input'
         self.fields['tags'].widget.attrs['class'] = 'form__input'
         self.fields['cooking_time'].widget.attrs['class'] = 'form__input'
-        self.fields['description'].widget.attrs['class'] = "form__textarea"
+        self.fields['description'].widget.attrs['class'] = 'form__textarea'
         self.fields['image'].widget.attrs['class'] = 'file'

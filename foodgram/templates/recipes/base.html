@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
 
     <head>
         <meta charset="UTF-8">
@@ -26,11 +26,7 @@
 
     <body class="body">
         <header class="header">
-            {% if user.is_authenticated %}
-                {% include 'blocks/navAuth.html' %}
-            {% else %}
-                {% include 'blocks/navNotAuth.html' %}
-            {% endif %}
+            {% include 'recipes/blocks/nav.html' %}
         </header>
         <main class="main container">
             <div class="main__header">
@@ -56,10 +52,10 @@
             {% endblock %}
 
             {% if section == 'index' or section == 'favorite' or section == 'follow' or section ==  'profile' %}
-                {% include 'blocks/paginator.html' %}
+                {% include 'recipes/blocks/paginator.html' %}
             {% endif %}
         </main>
-        {% include 'blocks/footer.html' %}
-        {% include 'blocks/jsscripts.html' %}
+        {% include 'recipes/blocks/footer.html' %}
+        {% include 'recipes/blocks/jsscripts.html' %}
     </body>
 </html>

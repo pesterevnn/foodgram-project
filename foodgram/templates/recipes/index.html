@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "recipes/base.html" %}
 
 {% block title %}Рецепты{% endblock %}
 
@@ -7,7 +7,7 @@
 {% block content %} 
     <div class="card-list">
         {% for recipe in page %}
-            {% include 'blocks/recipe.html' %}
+            {% include 'recipes/blocks/recipe.html' %}
         {% endfor %}
     </div>
 {% endblock %}
