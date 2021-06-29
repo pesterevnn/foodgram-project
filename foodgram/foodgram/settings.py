@@ -7,6 +7,8 @@ SECRET_KEY = 'django-insecure-y@542@a+576l!oaq^3vp%cug(ui52(-6k1r5-b0*qpl66fy-zr
 
 DEBUG = True
 
+SITE_ID = 1
+
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
@@ -26,6 +28,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+    'django.contrib.flatpages',
 ]
 
 MIDDLEWARE = [
@@ -36,6 +40,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.flatpages.middleware.FlatpageFallbackMiddleware',
 ]
 
 ROOT_URLCONF = 'foodgram.urls'
@@ -55,6 +60,8 @@ TEMPLATES = [
                 'recipes.context_processors.tags.get_all_tags',
                 'recipes.context_processors.purchases_count.get_purchases_count',
                 'recipes.context_processors.favorite_recipes.get_favorite_recipes',
+                'recipes.context_processors.users_tags.get_all_users_tags',
+                'recipes.context_processors.sections.get_section',
             ],
         },
     },

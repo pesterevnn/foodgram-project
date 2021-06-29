@@ -1,10 +1,10 @@
-from ..models import Purchases
+from ..models import Purchase
 
 
 def get_purchases_count(request):
     curent_user = request.user
     if curent_user.is_authenticated:
-        purchases = Purchases.objects.filter(customer=curent_user)
+        purchases = Purchase.objects.filter(customer=curent_user)
         purchases_count = purchases.count()
     else:
         purchases = None

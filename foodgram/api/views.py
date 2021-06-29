@@ -1,9 +1,10 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
-from recipes.models import (FavoriteRecipes, Follows, Ingredients, Purchases,
-                            Recipes)
 from rest_framework import filters, status, viewsets
 from rest_framework.response import Response
+
+from recipes.models import (FavoriteRecipe, Follow, Ingredient, Purchase,
+                            Recipe)
 
 from .permissions import IsAuthUser
 from .serializers import (FavoriteRecipeSerializer, IngredientSerializer,
@@ -13,7 +14,7 @@ User = get_user_model()
 
 
 class PurchaseViewSet(viewsets.ModelViewSet):
-    queryset = Purchases.objects.all()
+    queryset = Purchase.objects.all()
     serializer_class = PurchaseSerializer
     permission_classes = (IsAuthUser,)
 
@@ -23,14 +24,14 @@ class PurchaseViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         recipe = get_object_or_404(
-            Recipes,
+            Recipe,
             pk=self.request.data['id']
         )
         serializer.save(customer=self.request.user, recipe=recipe)
 
     def destroy(self, request, *args, **kwargs):
-        recipe = get_object_or_404(Recipes, pk=self.kwargs.get('pk'))
-        instance = Purchases.objects.filter(
+        recipe = get_object_or_404(Recipe, pk=self.kwargs.get('pk'))
+        instance = Purchase.objects.filter(
             customer=self.request.user,
             recipe=recipe
         )
@@ -39,7 +40,7 @@ class PurchaseViewSet(viewsets.ModelViewSet):
 
 
 class FavoriteRecipeViewSet(viewsets.ModelViewSet):
-    queryset = FavoriteRecipes.objects.all()
+    queryset = FavoriteRecipe.objects.all()
     serializer_class = FavoriteRecipeSerializer
 
     def get_queryset(self):
@@ -48,14 +49,14 @@ class FavoriteRecipeViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         recipe = get_object_or_404(
-            Recipes,
+            Recipe,
             pk=self.request.data['id']
         )
         serializer.save(user=self.request.user, recipe=recipe)
 
     def destroy(self, request, *args, **kwargs):
-        recipe = get_object_or_404(Recipes, pk=self.kwargs.get('pk'))
-        instance = FavoriteRecipes.objects.filter(
+        recipe = get_object_or_404(Recipe, pk=self.kwargs.get('pk'))
+        instance = FavoriteRecipe.objects.filter(
             user=self.request.user,
             recipe=recipe
         )
@@ -64,7 +65,7 @@ class FavoriteRecipeViewSet(viewsets.ModelViewSet):
 
 
 class SubscribeViewSet(viewsets.ModelViewSet):
-    queryset = Follows.objects.all()
+    queryset = Follow.objects.all()
     serializer_class = SubscribeSerializer
 
     def get_queryset(self):
@@ -77,7 +78,7 @@ class SubscribeViewSet(viewsets.ModelViewSet):
 
     def destroy(self, request, *args, **kwargs):
         author = get_object_or_404(User, pk=self.kwargs.get('pk'))
-        instance = Follows.objects.filter(
+        instance = Follow.objects.filter(
             subscriber=self.request.user,
             author=author
         )
@@ -86,7 +87,7 @@ class SubscribeViewSet(viewsets.ModelViewSet):
 
 
 class IngredientViewSet(viewsets.ModelViewSet):
-    queryset = Ingredients.objects.all()
+    queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', ]

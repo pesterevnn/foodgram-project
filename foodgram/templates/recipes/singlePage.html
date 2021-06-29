@@ -23,7 +23,7 @@
                 </div>
                 <ul class="single-card__items">
                     {% for tag in recipe.tags.all %}
-                        <li class="single-card__item"><span class="badge badge_style_{{tag.color}}">{{tag.description}}</span></li>
+                        <li class="single-card__item"><span class="badge badge_style_{{ tag.color }}">{{ tag.description }}</span></li>
                     {% endfor %}
                 </ul>
                 <div class="single-card__items single-card__items_column">
@@ -42,15 +42,13 @@
                         {% else %}
                             <li class="single-card__item"><button class="button button_style_blue" name="purchases" data-out><span class="icon-plus"></span>Добавить в покупки</button></li>
                         {% endif %}
-                        {%if user.is_authenticated %}
-                            {% if is_in_follow %}
-                                <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe">Отписаться от автора</button></li>
-                            {% else %}
-                                <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></li>
-                            {% endif %}
+
+                        {% if is_in_follow %}
+                            <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe">Отписаться от автора</button></li>
+                        {% else %}
+                            <li class="single-card__item"><button class="button button_style_light-blue button_size_subscribe" name="subscribe" data-out>Подписаться на автора</button></li>
                         {% endif %}
                     {% endif %}
-
 
                 </ul>
                 <div class="single-card__section">

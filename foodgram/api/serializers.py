@@ -1,5 +1,7 @@
-from recipes.models import FavoriteRecipes, Follows, Ingredients, Purchases
+from django.db.models.fields import CharField
 from rest_framework import serializers
+
+from recipes.models import FavoriteRecipe, Follow, Ingredient, Purchase
 
 
 class PurchaseSerializer(serializers.ModelSerializer):
@@ -13,7 +15,7 @@ class PurchaseSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = Purchases
+        model = Purchase
         fields = '__all__'
 
 
@@ -28,7 +30,7 @@ class FavoriteRecipeSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = FavoriteRecipes
+        model = FavoriteRecipe
         fields = '__all__'
 
 
@@ -43,11 +45,13 @@ class SubscribeSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = Follows
+        model = Follow
         fields = '__all__'
 
 
 class IngredientSerializer(serializers.ModelSerializer):
+    title = serializers.StringRelatedField(many=False)
+
     class Meta:
-        model = Ingredients
-        fields = ('title', 'dimension',)
+        model = Ingredient
+        fields = '__all__'

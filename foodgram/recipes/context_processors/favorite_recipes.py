@@ -1,14 +1,14 @@
-from ..models import FavoriteRecipes, Purchases
+from ..models import FavoriteRecipe, Purchase
 from ..utils import get_ids_recipes_in_favorite, get_ids_recipes_in_purchases
 
 
 def get_favorite_recipes(request):
     curent_user = request.user
     if request.user.is_authenticated:
-        favorite_recipes = FavoriteRecipes.objects.filter(
+        favorite_recipes = FavoriteRecipe.objects.filter(
             user=curent_user)
         fav_recipes_count = favorite_recipes.count()
-        purchases = Purchases.objects.filter(customer=curent_user)
+        purchases = Purchase.objects.filter(customer=curent_user)
         ids_recipes_list_in_purchases = get_ids_recipes_in_purchases(
             purchases)
         ids_recipes_list_in_favorite = get_ids_recipes_in_favorite(

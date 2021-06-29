@@ -36,11 +36,11 @@
                         {% for tag in users_tags %}
                             <li class="tags__item">
                                 {% if tag.active %}
-                                    <a id="tag.tag" class="tags__checkbox tags__checkbox_style_{{tag.tag.color}} tags__checkbox_active" href="?tag={{tag.tag.tag}}&swch=off"></a>
+                                    <a id="{{ tag.tag.id }}" class="tags__checkbox tags__checkbox_style_{{ tag.tag.color }} tags__checkbox_active" href="?tag={{ tag.tag.tag }}&swch=off"></a>
                                 {% else %}
-                                    <a id="tag.tag" class="tags__checkbox tags__checkbox_style_{{tag.tag.color}}" href="?tag={{tag.tag.tag}}&swch=on"></a>    
+                                    <a id="tag.tag" class="tags__checkbox tags__checkbox_style_{{ tag.tag.color }}" href="?tag={{ tag.tag.tag }}&swch=on"></a>    
                                 {% endif %}
-                                <span class="tags__label">{{tag.tag.description}}</span>
+                                <span class="tags__label">{{ tag.tag.description }}</span>
                             </li>
                         {% endfor %}
                     </ul>

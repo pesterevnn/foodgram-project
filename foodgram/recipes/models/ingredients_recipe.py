@@ -1,16 +1,16 @@
 from django.db import models
 
-from .ingredients import Ingredients
-from .recipes import Recipes
+from .ingredients import Ingredient
+from .recipes import Recipe
 
 
-class Ingredients_Recipe(models.Model):
+class IngredientRecipe(models.Model):
     recipe = models.ForeignKey(
-        Recipes,
+        Recipe,
         on_delete=models.CASCADE
     )
     ingredient = models.ForeignKey(
-        Ingredients,
+        Ingredient,
         on_delete=models.CASCADE,
         verbose_name='Ингредиент',
     )

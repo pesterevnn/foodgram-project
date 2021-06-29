@@ -1,11 +1,11 @@
 from django.forms import ModelForm, Textarea
 
-from .models import Recipes
+from .models import Recipe
 
 
 class RecipeCreateForm(ModelForm):
     class Meta:
-        model = Recipes
+        model = Recipe
         fields = ['title', 'tags', 'cooking_time', 'description', 'image']
         widgets = {
             'description': Textarea(attrs={'cols': 80, 'rows': 8}),

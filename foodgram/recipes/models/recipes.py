@@ -1,11 +1,11 @@
 from django.conf import settings
 from django.db import models
 
-from .ingredients import Ingredients
-from .tags import Tags
+from .ingredients import Ingredient
+from .tags import Tag
 
 
-class Recipes(models.Model):
+class Recipe(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name='Автор',
@@ -34,7 +34,7 @@ class Recipes(models.Model):
         help_text='Прикрепите фото рецепта',
     )
     tags = models.ManyToManyField(
-        Tags,
+        Tag,
         verbose_name='Тэги',
         blank=True,
         related_name='recipes',
@@ -44,8 +44,8 @@ class Recipes(models.Model):
         help_text='Укажите время приготовления в минутах'
     )
     ingredients = models.ManyToManyField(
-        Ingredients,
-        through='Ingredients_Recipe',
+        Ingredient,
+        through='IngredientRecipe',
         through_fields=('recipe', 'ingredient'),
         verbose_name='Ингредиенты',
     )
@@ -57,9 +57,3 @@ class Recipes(models.Model):
 
     def __str__(self):
         return self.title
-
-    def get_ingredients_list(self):
-        ingredients = []
-        for ingredient in self.ingredients.all():
-            ingredients.append(ingredient)
-        return ingredients

@@ -21,7 +21,7 @@ v1_router.register(
     basename='subscriptions'
 )
 v1_router.register(
-    'ingredients',
+    r'^ingredients',
     IngredientViewSet,
     basename='ingredients'
 )

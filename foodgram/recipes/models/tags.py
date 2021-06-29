@@ -1,11 +1,14 @@
 from django.db import models
 
 
-class Tags(models.Model):
+class Tag(models.Model):
+    BREAKFAST = 'breakfast'
+    LUNCH = 'lunch'
+    DINNER = 'dinner'
     VALUES_TAGS = [
-        ('breakfast', 'breakfast'),
-        ('lunch', 'lunch'),
-        ('dinner', 'dinner')
+        (BREAKFAST, 'breakfast'),
+        (LUNCH, 'lunch'),
+        (DINNER, 'dinner')
     ]
     tag = models.CharField(
         verbose_name='Таг',

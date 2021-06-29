@@ -11,33 +11,25 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfgen import canvas
 
 from .forms import RecipeCreateForm
-from .models import (FavoriteRecipes, Follows, Ingredients, Ingredients_Recipe,
-                     Purchases, Recipes)
-from .utils import (get_actual_userstags, get_all_ingredients_from_shoplist,
-                    get_ids_authors_in_follows, get_ids_recipes_in_favorite,
-                    get_ingredients_for_recipe, get_tags_ids)
+from .models import (FavoriteRecipe, Follow, Ingredient, IngredientRecipe,
+                     Purchase, Recipe)
+from .utils import (get_all_ingredients_from_shoplist,
+                    get_filtered_recipes_by_tags, get_ids_authors_in_follows,
+                    get_ids_recipes_in_favorite, get_ingredients_for_recipe,
+                    get_tags_ids)
 
 
 def index(request):
     curent_user = request.user
     if curent_user.is_authenticated:
-        tag_click = request.GET.get('tag')
-        users_tags = get_actual_userstags(request, tag_click)
-        filtered_tags_id = []
-        for item in users_tags:
-            if item.active:
-                filtered_tags_id.append(item.tag.id)
-        recipes = Recipes.objects.filter(
-            tags__in=filtered_tags_id).distinct()
+        recipes = get_filtered_recipes_by_tags(request)
     else:
-        users_tags = []
-        recipes = Recipes.objects.all()
+        recipes = Recipe.objects.all()
     paginator = Paginator(recipes, settings.PAGINATOR_PAGE_SIZE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     context = {
         'page': page,
-        'users_tags': users_tags,
         'recipes': recipes,
         'paginator': paginator,
     }
@@ -45,30 +37,23 @@ def index(request):
 
 
 def favorite(request):
-    tag_click = request.GET.get('tag')
-    users_tags = get_actual_userstags(request, tag_click)
-    filtered_tags_id = []
-    for item in users_tags:
-        if item.active:
-            filtered_tags_id.append(item.tag.id)
     curent_user = request.user
     if curent_user.is_authenticated:
-        favorite_recipes = FavoriteRecipes.objects.filter(
+        favorite_recipes = FavoriteRecipe.objects.filter(
             user=curent_user)
         ids_recipes_list_in_favorite = get_ids_recipes_in_favorite(
             favorite_recipes)
-        recipes = Recipes.objects.filter(
-            tags__in=filtered_tags_id,
-            pk__in=ids_recipes_list_in_favorite).distinct()
+        recipes = get_filtered_recipes_by_tags(
+            request,
+            ids_recipes_list_in_favorite
+        )
     else:
-        recipes = Recipes.objects.filter(
-            tags__in=filtered_tags_id).distinct()
+        recipes = get_filtered_recipes_by_tags(request)
     paginator = Paginator(recipes, settings.PAGINATOR_PAGE_SIZE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     context = {
         'page': page,
-        'users_tags': users_tags,
         'recipes': recipes,
         'paginator': paginator,
     }
@@ -79,29 +64,18 @@ def profile(request, username):
     curent_user = request.user
     user = get_object_or_404(get_user_model(), username=username)
     if request.user.is_authenticated:
-        tag_click = request.GET.get('tag')
-        users_tags = get_actual_userstags(request, tag_click)
-        filtered_tags_id = []
-        for item in users_tags:
-            if item.active:
-                filtered_tags_id.append(item.tag.id)
-        recipes = Recipes.objects.filter(
-            author=user,
-            tags__in=filtered_tags_id).distinct()
-
-        is_follow = Follows.objects.filter(
+        recipes = get_filtered_recipes_by_tags(request, None, user)
+        is_follow = Follow.objects.filter(
             subscriber=curent_user,
             author=user).exists()
     else:
-        users_tags = []
-        recipes = Recipes.objects.filter(author=user)
+        recipes = Recipe.objects.filter(author=user)
         is_follow = False
     paginator = Paginator(recipes, settings.PAGINATOR_PAGE_SIZE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
     context = {
         'page': page,
-        'users_tags': users_tags,
         'recipes': recipes,
         'paginator': paginator,
         'author': user,
@@ -112,7 +86,7 @@ def profile(request, username):
 
 def follow(request):
     curent_user = request.user
-    follows = Follows.objects.filter(subscriber=curent_user)
+    follows = Follow.objects.filter(subscriber=curent_user)
     ids_follows_author = get_ids_authors_in_follows(follows)
     paginator = Paginator(follows, settings.PAGINATOR_PAGE_SIZE)
     page_number = request.GET.get('page')
@@ -132,16 +106,16 @@ def shoplist(request):
 
 def recipe(request, recipe_id):
     curent_user = request.user
-    recipe = Recipes.objects.get(pk=recipe_id)
-    ingredients = Ingredients_Recipe.objects.filter(recipe=recipe)
+    recipe = get_object_or_404(Recipe, pk=recipe_id)
+    ingredients = IngredientRecipe.objects.filter(recipe=recipe)
     if curent_user.is_authenticated:
-        is_favorite = FavoriteRecipes.objects.filter(
+        is_favorite = FavoriteRecipe.objects.filter(
             user=curent_user,
             recipe=recipe).exists()
-        is_in_purcheses = Purchases.objects.filter(
+        is_in_purcheses = Purchase.objects.filter(
             customer=curent_user,
             recipe=recipe).exists()
-        is_in_follow = Follows.objects.filter(
+        is_in_follow = Follow.objects.filter(
             subscriber=curent_user,
             author=recipe.author
         )
@@ -165,11 +139,12 @@ def create_or_edit_recipe(request, recipe_id=None):
     if recipe_id is not None:
         added = False
         recipe = get_object_or_404(
-            Recipes,
+            Recipe,
             id=recipe_id
         )
         for ingredient in recipe.ingredients.all():
-            ingr_recipe = Ingredients_Recipe.objects.get(
+            ingr_recipe = get_object_or_404(
+                IngredientRecipe,
                 recipe=recipe,
                 ingredient=ingredient
             )
@@ -195,9 +170,9 @@ def create_or_edit_recipe(request, recipe_id=None):
         if ing_for_recipes:
             ids_ifr = []
             for key in ing_for_recipes.keys():
-                ingredient = Ingredients.objects.get(pk=key)
+                ingredient = get_object_or_404(Ingredient, pk=key)
                 amount = ing_for_recipes[key]
-                ing_recipe = Ingredients_Recipe(
+                ing_recipe = IngredientRecipe(
                     recipe=recipe,
                     ingredient=ingredient,
                     amount=amount
@@ -224,7 +199,7 @@ def create_or_edit_recipe(request, recipe_id=None):
 
 @login_required
 def delete_recipe(request, recipe_id):
-    recipe = Recipes.objects.get(pk=recipe_id)
+    recipe = get_object_or_404(Recipe, pk=recipe_id)
     recipe.delete()
     return redirect('index')
 

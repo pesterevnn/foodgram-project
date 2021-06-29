@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Ingredients(models.Model):
+class Ingredient(models.Model):
     title = models.CharField(
         verbose_name='Наименование',
         max_length=150,

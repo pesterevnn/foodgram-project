@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import include, path
 
 from . import views
 
@@ -23,6 +23,16 @@ urlpatterns = [
         views.delete_recipe,
         name='del_recipe'
     ),
-    path('<str:username>/', views.profile, name='profile'),
     path('recipes/<int:recipe_id>/', views.recipe, name='recipe'),
+    path('<str:username>/', views.profile, name='profile'),
+    path('recipes/api/', include('api.urls')),
+    path('create_recipe/api/', include('api.urls')),
+    path('change_recipe/api/', include('api.urls')),
+    path('recipes/<int:recipe_id>/api/', include('api.urls')),
+    path(
+        'recipes/<int:recipe_id>/change_recipe/api/',
+        include('api.urls')
+    ),
+    path('favorite/api/', include('api.urls')),
+    path('follow/api/', include('api.urls')),
 ]

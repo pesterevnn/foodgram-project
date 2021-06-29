@@ -1,11 +1,8 @@
-from ..models import Tags
+from ..models import Tag
 
 
 def get_all_tags(request):
-    tags = Tags.objects.all()
-    section = request.resolver_match.url_name
-
+    tags = Tag.objects.all()
     return {
         'tags': tags,
-        'section': section,
     }

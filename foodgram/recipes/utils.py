@@ -1,4 +1,7 @@
-from .models import Ingredients, Ingredients_Recipe, Purchases, Tags, UsersTags
+from django.shortcuts import get_object_or_404
+
+from .models import (Ingredient, IngredientRecipe, Purchase, Recipe, Tag,
+                     UsersTag)
 
 
 def get_usertags(request):
@@ -10,17 +13,17 @@ def get_usertags(request):
 def get_tags_ids(post_dict):
     tags_ids = []
     if post_dict.get('breakfast'):
-        tags_ids.append(Tags.objects.get(tag='breakfast').id)
+        tags_ids.append(Tag.objects.get(tag='breakfast').id)
     if post_dict.get('lunch'):
-        tags_ids.append(Tags.objects.get(tag='lunch').id)
+        tags_ids.append(Tag.objects.get(tag='lunch').id)
     if post_dict.get('dinner'):
-        tags_ids.append(Tags.objects.get(tag='dinner').id)
+        tags_ids.append(Tag.objects.get(tag='dinner').id)
     return tags_ids
 
 
 def get_all_ingredients_from_shoplist(request):
     curent_user = request.user
-    purchases = Purchases.objects.filter(customer=curent_user)
+    purchases = Purchase.objects.filter(customer=curent_user)
     recipes = []
     for purchase in purchases:
         recipes.append(purchase.recipe)
@@ -28,7 +31,8 @@ def get_all_ingredients_from_shoplist(request):
     all_ingredients = {}
     for recipe in recipes:
         for ingredient in recipe.ingredients.all():
-            ingr_recipe = Ingredients_Recipe.objects.get(
+            ingr_recipe = get_object_or_404(
+                IngredientRecipe,
                 recipe=recipe,
                 ingredient=ingredient
             )
@@ -45,7 +49,7 @@ def get_all_ingredients_from_shoplist(request):
 
 def set_active_userstags(request):
     user = request.user
-    tags = Tags.objects.all()
+    tags = Tag.objects.all()
     users_tags = []
     if user.is_authenticated:
         for tag in tags:
@@ -54,7 +58,7 @@ def set_active_userstags(request):
                 'tag': tag,
                 'active': True
             }
-            users_tag, created = UsersTags.objects.update_or_create(
+            users_tag, created = UsersTag.objects.update_or_create(
                 user=user,
                 tag=tag,
                 defaults=values_for_update
@@ -67,8 +71,8 @@ def get_actual_userstags(request, tag_click):
     curent_user = request.user
     users_tags = []
     if tag_click is not None:
-        tag_id = Tags.objects.get(tag=tag_click).id
-        tag = UsersTags.objects.get(tag=tag_id, user=curent_user)
+        tag_id = get_object_or_404(Tag, tag=tag_click).id
+        tag = get_object_or_404(UsersTag, tag=tag_id, user=curent_user)
         tag_swch = request.GET.get('swch')
         if tag_swch == 'off':
             tag.active = False
@@ -112,8 +116,30 @@ def get_ingredients_for_recipe(post_dict):
             name_ing = post_dict[key]
             value_ing = post_dict[f"valueIngredient_{index}"]
             units_ing = post_dict[f"unitsIngredient_{index}"]
-            ing_id = Ingredients.objects.get(
+            ing_id = get_object_or_404(
+                Ingredient,
                 title=name_ing,
                 dimension=units_ing).id
             ingredients_recipe_dic[ing_id] = value_ing
     return ingredients_recipe_dic
+
+
+def get_filtered_recipes_by_tags(request, filtered_id_list=None, user=None):
+        tag_click = request.GET.get('tag')
+        users_tags = get_actual_userstags(request, tag_click)
+        filtered_tags_id = []
+        for item in users_tags:
+            if item.active:
+                filtered_tags_id.append(item.tag.id)
+        if filtered_id_list is None:
+            recipes = Recipe.objects.filter(
+                tags__in=filtered_tags_id).distinct()
+        else:
+            recipes = Recipe.objects.filter(
+                tags__in=filtered_tags_id,
+                pk__in=filtered_id_list).distinct()
+        if user is not None:
+            recipes = Recipe.objects.filter(
+                author=user,
+                tags__in=filtered_tags_id).distinct()
+        return recipes

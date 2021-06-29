@@ -1,7 +1,8 @@
 from django.conf import settings
-from django.conf.urls.static import static
 from django.conf.urls import handler404, handler500
+from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.flatpages import views
 from django.urls import include, path
 
 handler404 = 'recipes.views.page_not_found'
@@ -10,20 +11,17 @@ handler500 = 'recipes.views.server_error'
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('recipes.urls')),
+    path('api/', include('api.urls')),
     path('auth/', include('users.urls')),
     path('auth/', include('django.contrib.auth.urls')),
-    path('api/', include('api.urls')),
-    path('favorite/api/', include('api.urls')),
-    path('follow/api/', include('api.urls')),
-    path('recipes/api/', include('api.urls')),
-    path('create_recipe/api/', include('api.urls')),
-    path('change_recipe/api/', include('api.urls')),
-    path('recipes/<int:recipe_id>/api/', include('api.urls')),
-    path(
-        'recipes/<int:recipe_id>/change_recipe/api/',
-        include('api.urls')
-    ),
     path('<str:username>/api/', include('api.urls')),
+
+]
+
+urlpatterns += [
+    path('fp/about-us/', views.flatpage, {'url': '/fp/about-us/'}, name='aboutus'),
+    path('fp/about-techs/', views.flatpage, {'url': '/fp/about-techs/'}, name='abouttechs'),
+    path('fp/about-brend/', views.flatpage, {'url': '/fp/about-brend/'}, name='aboutbrend'),
 ]
 
 if settings.DEBUG:

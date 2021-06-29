@@ -1,10 +1,10 @@
 from django.conf import settings
 from django.db import models
 
-from .tags import Tags
+from .tags import Tag
 
 
-class UsersTags(models.Model):
+class UsersTag(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         verbose_name='Пользователь',
@@ -12,7 +12,7 @@ class UsersTags(models.Model):
         related_name='userstags',
     )
     tag = models.ForeignKey(
-        Tags,
+        Tag,
         verbose_name='Тэг',
         on_delete=models.CASCADE,
         related_name='userstags',

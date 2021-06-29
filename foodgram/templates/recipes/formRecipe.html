@@ -13,9 +13,9 @@
         <form class="form" method="post" enctype="multipart/form-data" action="{% if added %}{% url 'create_recipe'%}{% else %}{% url 'change_recipe' recipe.id%}{% endif %}">
             {% csrf_token %}
             <div class="form__group">
-                <label for="{{form.title.id}}" class="form__label">Название рецепта</label>
+                <label for="{{ form.title.id }}" class="form__label">Название рецепта</label>
                 <div class="form__field-group">
-                    {{form.title}}
+                    {{ form.title }}
                 </div>
             </div>
             <div class="form__group">
@@ -26,15 +26,15 @@
                         {% for tag in tags %}
                          <div class="tags__item">
                             {% if added %}
-                                <input type="checkbox" name="{{tag.tag}}" id="{{tag.id}}" class="tags__checkbox tags__checkbox_style_{{tag.color}}">
+                                <input type="checkbox" name="{{ tag.tag }}" id="{{ tag.id }}" class="tags__checkbox tags__checkbox_style_{{ tag.color }}">
                             {% else %}
                                 {% if tag in recipe.tags.all %}
-                                    <input type="checkbox" name="{{tag.tag}}" id="{{tag.id}}" class="tags__checkbox tags__checkbox_style_{{tag.color}}" checked>
+                                    <input type="checkbox" name="{{ tag.tag }}" id="{{ tag.id }}" class="tags__checkbox tags__checkbox_style_{{ tag.color }}" checked>
                                 {% else %}
-                                    <input type="checkbox" name="{{tag.tag}}" id="{{tag.id}}" class="tags__checkbox tags__checkbox_style_{{tag.color}}">
+                                    <input type="checkbox" name="{{ tag.tag }}" id="{{ tag.id }}" class="tags__checkbox tags__checkbox_style_{{ tag.color }}">
                                 {% endif %}
                             {% endif %}
-                            <label for="{{tag.id}}" class="tags__label">{{tag.description}}</label>
+                            <label for="{{ tag.id }}" class="tags__label">{{ tag.description }}</label>
                         </div>
                         {% endfor %}
 
@@ -43,7 +43,7 @@
                 </div>
             </div>
             <div class="form__group">
-                <label for="{{form.ingredients.id}}" class="form__label">Ингредиенты</label>
+                <label for="{{ form.ingredients.id }}" class="form__label">Ингредиенты</label>
                 <div class="form__field-group">
                     <div class="form__field-group-ingredientes">
 
@@ -63,11 +63,8 @@
                         <div class="form__field-group-ingredientes-container">
                         {% for ingredient in ingredients_recipe %}
                             <div class="form__field-item-ingredient" id="ing_3">
-                                <span>{{ingredient}}</span>
+                                <span>{{ ingredient }}</span>
                                 <span class="form__field-item-delete"></span>
-                                <!--input id="nameIngredient_{{ingredient.id}}" name="nameIngredient_{{ingredient.id}}" type="hidden" value="{{ingredient}}">
-                                <input id="valueIngredient_{{ingredient.id}}" name="valueIngredient_{{ingredient.id}}" type="hidden" value="{{ingredient.amount}}">
-                                <input id="unitsIngredient_{{ingredient.id}}" name="unitsIngredient_{{ingredient.id}}" type="hidden" value="{{ingredient.ingredient.dimension}}"-->
                             </div>
                         {% endfor %}
                         </div>
@@ -78,23 +75,23 @@
                 </div>
             </div>
             <div class="form__group">
-                <label for="{{form.cooking_time.id}}" class="form__label">Время приготовления</label>
+                <label for="{{ form.cooking_time.id }}" class="form__label">Время приготовления</label>
                 <div class="form__field-group form__field-group_time">
-                    {{form.cooking_time}}
-                    <label for="{{form.cooking_time.id}}" class="form__label">минут</label>
+                    {{ form.cooking_time }}
+                    <label for="{{ form.cooking_time.id }}" class="form__label">минут</label>
                 </div>
             </div>
             <div class="form__group">
-                <label for="{{form.description.id}}" class="form__label">Описание</label>
+                <label for="{{ form.description.id }}" class="form__label">Описание</label>
                 <div class="form__field-group">
-                    {{form.description}}
+                    {{ form.description }}
                     <span class="form__error"></span>
                 </div>
             </div>
             <div class="form__group">
-                <label for="{{form.image.id}}" class="form__label">Загрузить фото</label>
+                <label for="{{ form.image.id }}" class="form__label">Загрузить фото</label>
                 <div class="form__field-group">
-                    {{form.image}}
+                    {{ form.image }}
                     <span class="form__error"></span>
                 </div>
             </div>
