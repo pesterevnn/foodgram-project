@@ -1,4 +1,3 @@
-from django.db.models.fields import CharField
 from rest_framework import serializers
 
 from recipes.models import FavoriteRecipe, Follow, Ingredient, Purchase

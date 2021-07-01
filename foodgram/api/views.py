@@ -2,9 +2,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, status, viewsets
 from rest_framework.response import Response
-#from django.views.decorators.csrf import csrf_exempt
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
-from braces.views import CsrfExemptMixin
+from rest_framework.authentication import SessionAuthentication
 
 from recipes.models import (FavoriteRecipe, Follow, Ingredient, Purchase,
                             Recipe)
@@ -43,11 +41,11 @@ class PurchaseViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-class FavoriteRecipeViewSet(CsrfExemptMixin, viewsets.ModelViewSet):
+class FavoriteRecipeViewSet(viewsets.ModelViewSet):
     queryset = FavoriteRecipe.objects.all()
     serializer_class = FavoriteRecipeSerializer
     permission_classes = [IsAuthUser]
-    authentication_classes = [SessionAuthentication, BasicAuthentication]
+    authentication_classes = [SessionAuthentication]
 
     def get_queryset(self):
         curent_user = self.request.user
