@@ -7,39 +7,39 @@ from .models import (FavoriteRecipe, Follow, Ingredient, IngredientRecipe,
                      Purchase, Recipe, Tag)
 
 
-class FallowsAdmin(admin.ModelAdmin):
+class FallowAdmin(admin.ModelAdmin):
     list_display = ('subscriber', 'author')
     search_fields = ('subscriber', 'author')
 
 
-class FavoriteRecipesAdmin(admin.ModelAdmin):
+class FavoriteRecipeAdmin(admin.ModelAdmin):
     list_display = ('user', 'recipe')
     search_fields = ('user',)
 
 
-class PurchasesAdmin(admin.ModelAdmin):
+class PurchaseAdmin(admin.ModelAdmin):
     list_display = ('customer', 'recipe')
     search_fields = ('customer',)
 
 
-class IngredientsInline(admin.TabularInline):
+class IngredientInline(admin.TabularInline):
     model = IngredientRecipe
     fk_name = "recipe"
     max_num = 3
 
 
-class RecipesAdmin(admin.ModelAdmin):
+class RecipeAdmin(admin.ModelAdmin):
     list_display = ('title', 'author', 'description', 'pub_date')
     inlines = [
-        IngredientsInline,
+        IngredientInline,
     ]
 
 
-class IngredientsRecipeAdmin(admin.ModelAdmin):
+class IngredientRecipeAdmin(admin.ModelAdmin):
     list_display = ('recipe', 'ingredient', 'amount')
 
 
-class TagsAdmin(admin.ModelAdmin):
+class TagAdmin(admin.ModelAdmin):
     list_display = ('id', 'tag', 'description', 'color')
 
 
@@ -60,9 +60,9 @@ admin.site.unregister(FlatPage)
 admin.site.register(FlatPage, FlatPageAdmin)
 
 admin.site.register(Ingredient)
-admin.site.register(Recipe, RecipesAdmin)
-admin.site.register(IngredientRecipe, IngredientsRecipeAdmin)
-admin.site.register(Follow, FallowsAdmin)
-admin.site.register(Purchase, PurchasesAdmin)
-admin.site.register(FavoriteRecipe, FavoriteRecipesAdmin)
-admin.site.register(Tag, TagsAdmin)
+admin.site.register(Recipe, RecipeAdmin)
+admin.site.register(IngredientRecipe, IngredientRecipeAdmin)
+admin.site.register(Follow, FallowAdmin)
+admin.site.register(Purchase, PurchaseAdmin)
+admin.site.register(FavoriteRecipe, FavoriteRecipeAdmin)
+admin.site.register(Tag, TagAdmin)

@@ -10,7 +10,7 @@
         </span>
     {% endfor %}
     <div class="form-container">
-        <form class="form" method="post" enctype="multipart/form-data" action="{% if added %}{% url 'create_recipe'%}{% else %}{% url 'change_recipe' recipe.id%}{% endif %}">
+        <form class="form" method="post" enctype="multipart/form-data" action="{% if added %}{% url 'create_recipe' %}{% else %}{% url 'change_recipe' recipe.id %}{% endif %}">
             {% csrf_token %}
             <div class="form__group">
                 <label for="{{ form.title.id }}" class="form__label">Название рецепта</label>

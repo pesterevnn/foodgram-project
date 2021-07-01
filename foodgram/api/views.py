@@ -2,6 +2,8 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, status, viewsets
 from rest_framework.response import Response
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 from recipes.models import (FavoriteRecipe, Follow, Ingredient, Purchase,
                             Recipe)
@@ -13,10 +15,11 @@ from .serializers import (FavoriteRecipeSerializer, IngredientSerializer,
 User = get_user_model()
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class PurchaseViewSet(viewsets.ModelViewSet):
     queryset = Purchase.objects.all()
     serializer_class = PurchaseSerializer
-    permission_classes = (IsAuthUser,)
+    permission_classes = [] #(IsAuthUser,)
 
     def get_queryset(self):
         curent_user = self.request.user
@@ -39,9 +42,11 @@ class PurchaseViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class FavoriteRecipeViewSet(viewsets.ModelViewSet):
     queryset = FavoriteRecipe.objects.all()
     serializer_class = FavoriteRecipeSerializer
+    permission_classes = [] 
 
     def get_queryset(self):
         curent_user = self.request.user
@@ -64,9 +69,11 @@ class FavoriteRecipeViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class SubscribeViewSet(viewsets.ModelViewSet):
     queryset = Follow.objects.all()
     serializer_class = SubscribeSerializer
+    permission_classes = [] 
 
     def get_queryset(self):
         curent_user = self.request.user
@@ -86,6 +93,7 @@ class SubscribeViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+@method_decorator(csrf_exempt, name='dispatch')
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer

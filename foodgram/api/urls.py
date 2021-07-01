@@ -8,24 +8,52 @@ v1_router = DefaultRouter()
 v1_router.register(
     'purchases',
     PurchaseViewSet,
-    basename='purchases'
+    basename='add purchase'
 )
 v1_router.register(
-    'favorites',
+    'purchases/<int:pk>',
+    PurchaseViewSet,
+    basename='remove purchase'
+)
+v1_router.register(
+    r'favorites',
     FavoriteRecipeViewSet,
     basename='favorites'
 )
 v1_router.register(
-    'subscriptions',
+    r'subscriptions',
     SubscribeViewSet,
-    basename='subscriptions'
+    basename='add subscriptions'
 )
 v1_router.register(
-    r'^ingredients',
+    r'subscriptions/<int:pk>',
+    SubscribeViewSet,
+    basename='remove subscription'
+)
+v1_router.register(
+    r'ingredients',
     IngredientViewSet,
     basename='ingredients'
 )
 
 urlpatterns = [
-    path('v1/', include(v1_router.urls),),
+    path('favorite/api/', include(v1_router.urls)),
+    path('', include(v1_router.urls)),
 ]
+
+#    path('recipes/api/', include('api.urls')),
+#    path('favorite/api/', include('api.urls')),
+#    path('follow/api/', include('api.urls')),
+#    path('create_recipe/api/', include('api.urls')),
+#    path('change_recipe/api/', include('api.urls')),
+#    path(
+#        'recipes/<int:recipe_id>/change_recipe/api/',
+#        include('api.urls')
+#    ),
+#    path('<str:username>/api/', include('api.urls')),
+#    path('recipes/<int:recipe_id>/api/', include('api.urls')),
+#v1_router.register(
+#    r'recipes/<int:recipe_id>',
+#    FavoriteRecipeViewSet,
+#    basename='favorites for recipe'
+#)
