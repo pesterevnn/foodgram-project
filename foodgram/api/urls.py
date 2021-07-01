@@ -1,4 +1,5 @@
 from django.urls import include, path
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.routers import DefaultRouter
 
 from .views import (FavoriteRecipeViewSet, IngredientViewSet, PurchaseViewSet,
@@ -37,23 +38,5 @@ v1_router.register(
 )
 
 urlpatterns = [
-    path('favorite/api/', include(v1_router.urls)),
     path('', include(v1_router.urls)),
 ]
-
-#    path('recipes/api/', include('api.urls')),
-#    path('favorite/api/', include('api.urls')),
-#    path('follow/api/', include('api.urls')),
-#    path('create_recipe/api/', include('api.urls')),
-#    path('change_recipe/api/', include('api.urls')),
-#    path(
-#        'recipes/<int:recipe_id>/change_recipe/api/',
-#        include('api.urls')
-#    ),
-#    path('<str:username>/api/', include('api.urls')),
-#    path('recipes/<int:recipe_id>/api/', include('api.urls')),
-#v1_router.register(
-#    r'recipes/<int:recipe_id>',
-#    FavoriteRecipeViewSet,
-#    basename='favorites for recipe'
-#)

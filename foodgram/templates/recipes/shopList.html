@@ -4,7 +4,8 @@
 
 {% block header %}Список покупок{% endblock %}
 
-{% block content %} 
+{% block content %}
+{% csrf_token %}
     <div class="card-list card-list_column">
         <ul class="shopping-list">
             {% for purchase in purchases %}

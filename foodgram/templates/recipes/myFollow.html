@@ -3,7 +3,8 @@
 {% block title %}Мои подписки{% endblock %}
 {% block header %}Мои подписки{% endblock %}
     
-{% block content %} 
+{% block content %}
+{% csrf_token %}
     <div class="card-list">
         {% for follow in page %}
             {% include 'recipes/blocks/follow.html' %}

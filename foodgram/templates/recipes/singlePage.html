@@ -3,6 +3,7 @@
 {% block title %}{{ recipe.title }}{% endblock %}
 
 {% block content %}
+{% csrf_token %}
 
         <div class="single-card" data-id="{{ recipe.pk }}" data-author="{{ recipe.author.pk }}">
             <img src="{{ recipe.image.url }}" alt="{{ recipe.title }}" class="single-card__image">

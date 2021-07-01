@@ -1,3 +1,4 @@
+        {% csrf_token %}
         <div class="card" data-id="{{ recipe.id }}">
             <a href="{% url 'recipe' recipe.pk %}" class="link"><img src="{{ recipe.image.url }}" alt="Какой-то текст" class="card__image"></a>
             <div class="card__body">

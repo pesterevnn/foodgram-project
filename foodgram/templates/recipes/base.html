@@ -47,7 +47,8 @@
                 {% endif %}
             </div>
             
-            {% block content %} 
+            {% block content %}
+            {% csrf_token %}
                 <!-- Содержимое страницы -->
             {% endblock %}
 

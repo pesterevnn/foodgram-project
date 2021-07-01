@@ -5,6 +5,7 @@
 {% block header %}{{ author.first_name }}{% endblock %}
 
 {% block content %}
+{% csrf_token %}
     <div class="author-subscribe" data-author="{{ author.pk }}">
     {% if user.is_authenticated %}
         {% if is_follow %}

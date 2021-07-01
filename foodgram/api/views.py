@@ -2,8 +2,9 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, status, viewsets
 from rest_framework.response import Response
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
+#from django.views.decorators.csrf import csrf_exempt
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from braces.views import CsrfExemptMixin
 
 from recipes.models import (FavoriteRecipe, Follow, Ingredient, Purchase,
                             Recipe)
@@ -15,11 +16,11 @@ from .serializers import (FavoriteRecipeSerializer, IngredientSerializer,
 User = get_user_model()
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class PurchaseViewSet(viewsets.ModelViewSet):
     queryset = Purchase.objects.all()
     serializer_class = PurchaseSerializer
-    permission_classes = [] #(IsAuthUser,)
+    permission_classes = []
+    authentication_classes = [SessionAuthentication]
 
     def get_queryset(self):
         curent_user = self.request.user
@@ -42,11 +43,11 @@ class PurchaseViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class FavoriteRecipeViewSet(viewsets.ModelViewSet):
+class FavoriteRecipeViewSet(CsrfExemptMixin, viewsets.ModelViewSet):
     queryset = FavoriteRecipe.objects.all()
     serializer_class = FavoriteRecipeSerializer
-    permission_classes = [] 
+    permission_classes = [IsAuthUser]
+    authentication_classes = [SessionAuthentication, BasicAuthentication]
 
     def get_queryset(self):
         curent_user = self.request.user
@@ -69,11 +70,11 @@ class FavoriteRecipeViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class SubscribeViewSet(viewsets.ModelViewSet):
     queryset = Follow.objects.all()
     serializer_class = SubscribeSerializer
-    permission_classes = [] 
+    permission_classes = []
+    authentication_classes = [SessionAuthentication]
 
     def get_queryset(self):
         curent_user = self.request.user
@@ -93,9 +94,10 @@ class SubscribeViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
+    permission_classes = []
+    authentication_classes = []
     filter_backends = [filters.SearchFilter]
     search_fields = ['title', ]

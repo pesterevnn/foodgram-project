@@ -5,6 +5,7 @@
 {% block header %}Избранное{% endblock %}
 
 {% block content %}
+{% csrf_token %}
     <div class="card-list">
         {% for recipe in page %}
             {% include 'recipes/blocks/recipe.html' %}
