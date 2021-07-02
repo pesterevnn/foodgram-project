@@ -1,11 +1,9 @@
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+from recipes.models import FavoriteRecipe, Follow, Ingredient, Purchase, Recipe
 from rest_framework import filters, status, viewsets
-from rest_framework.response import Response
 from rest_framework.authentication import SessionAuthentication
-
-from recipes.models import (FavoriteRecipe, Follow, Ingredient, Purchase,
-                            Recipe)
+from rest_framework.response import Response
 
 from .permissions import IsAuthUser
 from .serializers import (FavoriteRecipeSerializer, IngredientSerializer,

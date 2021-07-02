@@ -7,7 +7,7 @@ from .models import (FavoriteRecipe, Follow, Ingredient, IngredientRecipe,
                      Purchase, Recipe, Tag)
 
 
-class FallowAdmin(admin.ModelAdmin):
+class FollowAdmin(admin.ModelAdmin):
     list_display = ('subscriber', 'author')
     search_fields = ('subscriber', 'author')
 
@@ -62,7 +62,7 @@ admin.site.register(FlatPage, FlatPageAdmin)
 admin.site.register(Ingredient)
 admin.site.register(Recipe, RecipeAdmin)
 admin.site.register(IngredientRecipe, IngredientRecipeAdmin)
-admin.site.register(Follow, FallowAdmin)
+admin.site.register(Follow, FollowAdmin)
 admin.site.register(Purchase, PurchaseAdmin)
 admin.site.register(FavoriteRecipe, FavoriteRecipeAdmin)
 admin.site.register(Tag, TagAdmin)

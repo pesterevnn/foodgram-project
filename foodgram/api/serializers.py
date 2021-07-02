@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from recipes.models import FavoriteRecipe, Follow, Ingredient, Purchase
+from rest_framework import serializers
 
 
 class PurchaseSerializer(serializers.ModelSerializer):
