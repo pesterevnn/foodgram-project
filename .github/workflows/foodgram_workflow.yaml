@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   tests_app:
-    name: tests app 
+    name: Tests app by PEP8 
     runs-on: ubuntu-latest
 
     steps:
@@ -75,7 +75,7 @@ jobs:
           sudo docker-compose exec -T web python manage.py collectstatic --no-input
 
   telegram_message:
-    name: send telegram message
+    name: Send telegram message
     runs-on: ubuntu-latest
     needs: deploy
     steps:
