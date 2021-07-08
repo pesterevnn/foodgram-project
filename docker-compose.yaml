@@ -27,7 +27,7 @@ services:
   nginx:
     image: nginx:1.19.3
     ports:
-      - "8000:80"
+      - "80:80"
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d
       - static_value:/app/static/
