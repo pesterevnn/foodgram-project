@@ -1,5 +1,5 @@
 import json
-from recipes.models import Ingredient
+from ..models import Ingredient
 
 
 if __name__ == '__main__':
