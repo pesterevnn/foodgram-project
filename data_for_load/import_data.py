@@ -10,4 +10,3 @@ if __name__ == '__main__':
     for item in data:
         new_ingredient = Ingredient(title=item['title'], dimension=item['dimension'])
         new_ingredient.save()
-        break
