@@ -1,10 +1,10 @@
 import json
-from ..models import Ingredient
+from .models import Ingredient
 
 
 if __name__ == '__main__':
 
-    with open('ingredients.json') as json_data:
+    with open('data_for_load/ingredients.json') as json_data:
         data = json.load(json_data,)
 
     for item in data:
