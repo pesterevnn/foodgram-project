@@ -18,8 +18,8 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - static_value:/app/foodgram/static/
-      - media_value:/app/foodgram/media/
+      - static_value:/app/recipes/static/
+      - media_value:/app/media/
     depends_on:
       - db
     env_file:
