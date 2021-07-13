@@ -1,4 +1,4 @@
-from django.forms import ModelForm, Textarea
+from django.forms import ModelForm, Textarea, ValidationError
 
 from .models import Recipe
 
@@ -18,3 +18,13 @@ class RecipeCreateForm(ModelForm):
         self.fields['cooking_time'].widget.attrs['class'] = 'form__input'
         self.fields['description'].widget.attrs['class'] = 'form__textarea'
         self.fields['image'].widget.attrs['class'] = 'file'
+
+    def clean(self):
+        data = self.cleaned_data
+        for key in data.keys():
+            if key[:14] == 'nameIngredient':
+                index = key[-1]
+                value_ing = data[f'valueIngredient_{index}']
+                if value_ing < 0:
+                    raise ValidationError("Количество ингредиентов не может быть меньше нуля!")
+        return data

@@ -1,11 +1,13 @@
+from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 
 from .models import (Ingredient, IngredientRecipe, Purchase, Recipe, Tag,
                      UsersTag)
 
 
-def get_users_tags(request):
-    user = request.user
+def get_users_tags(request, user=None):
+    if user is None:
+        user = request.user
     users_tags = user.userstags.all()
     return users_tags
 
@@ -47,8 +49,9 @@ def get_all_ingredients_from_shoplist(request):
     return all_ingredients
 
 
-def set_active_users_tags(request):
-    user = request.user
+def set_active_users_tags(request, user=None):
+    if user is None:
+        user = request.user
     tags = Tag.objects.all()
     users_tags = []
     if user.is_authenticated:
@@ -67,8 +70,11 @@ def set_active_users_tags(request):
     return users_tags
 
 
-def get_actual_users_tags(request, tag_click):
-    curent_user = request.user
+def get_actual_users_tags(request, tag_click, user=None):
+    if user is None:
+        curent_user = request.user
+    else:
+        curent_user = user
     users_tags = []
     if tag_click is not None:
         tag_id = get_object_or_404(Tag, tag=tag_click).id
@@ -85,9 +91,9 @@ def get_actual_users_tags(request, tag_click):
         tag.save()
         users_tags = curent_user.userstags.all()
     elif request.GET.get('page') is None:
-        users_tags = set_active_users_tags(request)
+        users_tags = set_active_users_tags(request, curent_user)
     else:
-        users_tags = get_users_tags(request)
+        users_tags = get_users_tags(request, curent_user)
     return users_tags
 
 
@@ -118,8 +124,8 @@ def get_ingredients_for_recipe(post_dict):
         if key[:14] == 'nameIngredient':
             index = key[-1]
             name_ing = post_dict[key]
-            value_ing = post_dict[f"valueIngredient_{index}"]
-            units_ing = post_dict[f"unitsIngredient_{index}"]
+            value_ing = post_dict[f'valueIngredient_{index}']
+            units_ing = post_dict[f'unitsIngredient_{index}']
             ing_id = get_object_or_404(
                 Ingredient,
                 title=name_ing,
@@ -131,7 +137,11 @@ def get_ingredients_for_recipe(post_dict):
 def get_filtered_recipes_by_tags(request, filtered_id_list=None,
                                  user=None):
     tag_click = request.GET.get('tag')
-    users_tags = get_actual_users_tags(request, tag_click)
+    if request.user.is_authenticated:
+        users_tags = get_actual_users_tags(request, tag_click)
+    else:
+        cur_user = get_object_or_404(get_user_model(), username='anonymus')
+        users_tags = get_actual_users_tags(request, tag_click, user=cur_user)
     filtered_tags_id = []
     for item in users_tags:
         if item.active:

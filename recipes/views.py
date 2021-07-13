@@ -20,11 +20,7 @@ from .utils import (get_all_ingredients_from_shoplist,
 
 
 def index(request):
-    curent_user = request.user
-    if curent_user.is_authenticated:
-        recipes = get_filtered_recipes_by_tags(request)
-    else:
-        recipes = Recipe.objects.all()
+    recipes = get_filtered_recipes_by_tags(request)
     paginator = Paginator(recipes, settings.PAGINATOR_PAGE_SIZE)
     page_number = request.GET.get('page')
     page = paginator.get_page(page_number)
@@ -36,6 +32,7 @@ def index(request):
     return render(request, 'index.html', context)
 
 
+@login_required
 def favorite(request):
     curent_user = request.user
     if curent_user.is_authenticated:
@@ -63,13 +60,12 @@ def favorite(request):
 def profile(request, username):
     curent_user = request.user
     user = get_object_or_404(get_user_model(), username=username)
+    recipes = get_filtered_recipes_by_tags(request, None, user)
     if request.user.is_authenticated:
-        recipes = get_filtered_recipes_by_tags(request, None, user)
         is_follow = Follow.objects.filter(
             subscriber=curent_user,
             author=user).exists()
     else:
-        recipes = Recipe.objects.filter(author=user)
         is_follow = False
     paginator = Paginator(recipes, settings.PAGINATOR_PAGE_SIZE)
     page_number = request.GET.get('page')
@@ -84,6 +80,7 @@ def profile(request, username):
     return render(request, 'authorRecipe.html', context)
 
 
+@login_required
 def follow(request):
     curent_user = request.user
     follows = Follow.objects.filter(subscriber=curent_user)
@@ -100,6 +97,7 @@ def follow(request):
     return render(request, 'myFollow.html', context)
 
 
+@login_required
 def shoplist(request):
     return render(request, 'shopList.html',)
 
@@ -133,6 +131,7 @@ def recipe(request, recipe_id):
     return render(request, 'singlePage.html', context)
 
 
+@login_required
 def create_or_edit_recipe(request, recipe_id=None):
     curent_user = request.user
     ingredients_recipe = []
@@ -207,6 +206,7 @@ def delete_recipe(request, recipe_id):
 pdfmetrics.registerFont(TTFont('Vera', 'Vera.ttf'))
 
 
+@login_required
 def download_shoplist(request):
     total_ingredients_dict = get_all_ingredients_from_shoplist(
         request)

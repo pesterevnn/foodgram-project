@@ -8,5 +8,6 @@ if __name__ == '__main__':
         data = json.load(json_data,)
 
     for item in data:
-        new_ingredient = Ingredient(title=item['title'], dimension=item['dimension'])
+        title = item['title'].replace('"', '`')
+        new_ingredient = Ingredient(title=title, dimension=item['dimension'])
         new_ingredient.save()

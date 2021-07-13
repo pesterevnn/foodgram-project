@@ -13,7 +13,8 @@ services:
     env_file:
       - ./.env
   web:
-    image: pesnikon/foodgram_web:latest
+#    image: pesnikon/foodgram_web:latest
+    build: .
     restart: always
     ports:
       - "8000:8000"
