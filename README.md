@@ -24,6 +24,3 @@ foodgram-project -
 
 ### Заполнение базы начальными данными
 Для заполнения начальных данных можно воспользоваться страницей администратора по адресу <http://127.0.0.1/admin/> или выполнить импорт из пакета load_data
-
-### Бэйдж workflow
-![workflow status](https://github.com/pesterevnn/foodgram-project-react/actions/workflows/foodgram_workflow.yaml/badge.svg)
